@@ -17,12 +17,15 @@ class BaseKafkaProducer(ABC):
 
     logger = get_logger("producer")
 
+
+    producer = KafkaProducer(**PRODUCER_CONFIG)
+    
     def __init__(self, topic: str):
         """
         传入 topic 名称，后续 send_message() 均发到该 topic
         """
         self.topic = topic
-        self.producer = KafkaProducer(**PRODUCER_CONFIG)
+    
 
     # ---------------- 公共方法 ----------------
     def send_message(self,

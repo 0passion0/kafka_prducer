@@ -13,7 +13,8 @@ def full_sync():
     """
 
     state_repo = StateRepository()
-    mongo_repo = MongoDBtoKafka(topic="temp3", collection="raw_video_list", key="my_hash")
+    mongo_repo = MongoDBtoKafka(
+        topic="temp3", collection="collection", key="my_hash")
 
     # 从状态存储中加载上次同步的时间戳
     last_seen = state_repo.load()

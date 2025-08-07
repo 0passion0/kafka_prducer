@@ -3,12 +3,12 @@
 MONGODB_DATABASES = {
     "default": {
         "type": "mongodb",
-        'user': 'medpeer',
-        'password': 'medpeer',
+        'user': 'admin',
+        'password': r'StrongP@ssw0rd',
         'auth_source': 'admin',  # 认证数据库（必须与用户创建库一致）
-        'host': '192.168.1.245',
+        'host': '47.92.65.175',
         'port': 27017,
-        'database': 'raw_data',
+        'database': 'tlg',
         "charset": "utf8mb4"
     },
 }
@@ -28,7 +28,7 @@ PRODUCER_CONFIG = {
     # 一批消息的字节数阈值，达到该大小或超过 linger_ms 就立即发送
     "batch_size": 16384,  # 16 KB
     # 消息在客户端缓冲区最多等待多少毫秒再发送（与 batch_size 配合做微批）
-    "linger_ms": 10000,
+    "linger_ms": 1000,
 
 }
 DEFAULT_CURSOR_FILE_PATH = 'cursors/mongodb.cursors'
