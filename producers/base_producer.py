@@ -17,20 +17,19 @@ class BaseKafkaProducer(ABC):
 
     logger = get_logger("producer")
 
-
-    producer = KafkaProducer(**PRODUCER_CONFIG)
-    
-    def __init__(self, topic: str):
+    def __init__(self, topic: str, producer_config: dict = None):
         """
         传入 topic 名称，后续 send_message() 均发到该 topic
         """
         self.topic = topic
-    
+        # 允许传入特定的生产者配置，如果未提供则使用默认配置
+        config = producer_config or PRODUCER_CONFIG
+        self.producer = KafkaProducer(**config)
 
     # ---------------- 公共方法 ----------------
     def send_message(self,
                      message: Dict[str, Any],
-                     key: Optional[bytes] = None) -> None:
+                     key: Optional[str] = None) -> None:
         """
         真正发送单条消息的方法
         :param message: 经过 transform 后的 dict
@@ -42,13 +41,24 @@ class BaseKafkaProducer(ABC):
         value = self.value_serialize(transform_message)
 
         # 异步发送到 Kafka，返回一个 Future 对象
-        future = self.producer.send(self.topic, value=value,key=key.encode('utf-8'))
+        future = self.producer.send(
+            self.topic, 
+            value=value,
+            key=key.encode('utf-8') if key else None
+        )
 
         # 同步阻塞 （不需要可注释）
         record_metadata = future.get(timeout=10)
         self.logger.info(f"[Kafka] 已发送消息：{record_metadata}")
         # 注意：这里并未调用 future.get() 同步等待结果，追求高吞吐
         # 如果想每条都同步确认，可改成 future.get(timeout=10)
+
+    def flush_and_close(self, timeout: float = 30.0):
+        """
+        刷新并关闭生产者连接
+        """
+        self.producer.flush(timeout=timeout)
+        self.producer.close()
 
     # ---------------- 抽象方法（子类必须实现） ----------------
     @abstractmethod
@@ -75,4 +85,3 @@ class BaseKafkaProducer(ABC):
         注意：Kafka 的 value 必须是 bytes
         """
         raise NotImplementedError
-

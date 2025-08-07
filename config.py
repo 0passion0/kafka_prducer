@@ -28,7 +28,8 @@ PRODUCER_CONFIG = {
     # 一批消息的字节数阈值，达到该大小或超过 linger_ms 就立即发送
     "batch_size": 16384,  # 16 KB
     # 消息在客户端缓冲区最多等待多少毫秒再发送（与 batch_size 配合做微批）
-    "linger_ms": 1000,
+    "linger_ms": 1,
 
 }
-DEFAULT_CURSOR_FILE_PATH = 'cursors/mongodb.cursors'
+
+DEFAULT_CURSOR_FILE_PATH = 'runtime/cursors/mongodb.cursors'

@@ -14,6 +14,9 @@
 - **连接池管理**：各种数据源和 Kafka 连接均采用连接池管理，提高性能
 - **可扩展架构**：基于抽象基类的设计，易于扩展支持其他数据源
 - **日志记录**：完善的日志记录机制，便于监控和调试
+- **切面化处理**：使用装饰器实现日志记录和性能监控等横切关注点
+- **依赖注入**：通过依赖注入提高代码的可测试性和解耦性
+- **命令行接口**：通过命令行参数灵活配置同步任务
 
 ## 项目结构
 
@@ -22,6 +25,7 @@ kafka_producer/
 ├── config.py                 # 配置文件，包含各种数据源和 Kafka 配置
 ├── main.py                   # 主程序入口
 ├── logger.py                 # 日志和状态管理模块
+├── decorators.py             # 装饰器模块，处理横切关注点
 ├── README.md                 # 项目说明文档
 ├── models/
 │   ├── __init__.py
@@ -45,6 +49,14 @@ kafka_producer/
 - 提供统一的消息发送接口
 - 支持消息转换和序列化功能
 - 子类只需实现特定的抽象方法即可支持新的数据源
+
+### 装饰器模块 (decorators.py)
+- 提供日志记录和性能监控等横切关注点的处理
+- 通过注解方式应用，降低业务代码的侵入性
+
+### 游标管理 (logger.py)
+- 抽象游标管理接口，支持多种游标存储方式
+- 默认实现基于文件的游标管理
 
 ### 具体数据源实现
 - MongoDB 到 Kafka 同步器：继承自 BaseKafkaProducer，实现 MongoDB 数据同步逻辑
@@ -82,6 +94,22 @@ PRODUCER_CONFIG = {
 
 ## 使用方法
 
+### 命令行方式（推荐）
+
+使用命令行参数运行同步任务：
+
+```bash
+python main.py --data_source mongodb --topic temp3 --key my_hash --collection collection
+```
+
+参数说明：
+- `--data_source`: 数据源类型（当前支持 mongodb）
+- `--topic`: Kafka主题名称
+- `--key`: 用于分区的键字段名
+- `--collection`: MongoDB集合名称（仅mongodb数据源需要）
+
+### 直接运行方式
+
 1. 配置数据源和 Kafka 连接参数（在 [config.py](file:///e:/python/kafka_prducer/config.py) 文件中）
 2. 运行主程序：
    ```bash
@@ -99,9 +127,23 @@ PRODUCER_CONFIG = {
 
 项目采用面向对象设计，易于扩展支持其他数据源：
 
-1. 创建新的数据源管理器（如需要）
-2. 继承 [BaseKafkaProducer](file:///e:/python/kafka_prducer/producers/base_producer.py#L12-L57) 类实现新的数据源生产者
-3. 实现 [transform()](file:///e:/python/kafka_prducer/producers/base_producer.py#L43-L57) 和 [value_serialize()](file:///e:/python/kafka_prducer/producers/base_producer.py#L59-L70) 抽象方法
-4. 在 [main.py](file:///e:/python/kafka_prducer/main.py) 中调用新的生产者类
+### 添加新的数据源步骤：
 
-未来将支持更多数据源，如 MySQL、PostgreSQL、Oracle 等关系型数据库以及其他 NoSQL 数据库。
+1. 在 `models/` 目录下创建对应数据源的连接管理器
+2. 在 `producers/` 目录下创建继承自 [BaseKafkaProducer](file:///e:/python/kafka_prducer/producers/base_producer.py#L14-L57) 的具体实现类
+3. 实现 [transform()](file:///e:/python/kafka_prducer/producers/base_producer.py#L53-L65) 和 [value_serialize()](file:///e:/python/kafka_prducer/producers/base_producer.py#L67-L77) 抽象方法
+4. 在 [main.py](file:///e:/python/kafka_prducer/main.py) 中添加相应的同步函数
+
+### 切面化增强
+
+项目通过装饰器实现了切面化处理：
+- [@log_execution](file:///e:/python/kafka_prducer/decorators.py#L7-L22) - 自动记录方法执行日志
+- [@monitor_performance](file:///e:/python/kafka_prducer/decorators.py#L25-L41) - 监控方法执行性能
+
+### 未来计划
+
+1. 支持更多数据源（MySQL、PostgreSQL等）
+2. 实现更复杂的游标管理（如数据库存储）
+3. 增加Web管理界面
+4. 支持定时任务和实时同步模式
+5. 增加更多的监控和告警功能
