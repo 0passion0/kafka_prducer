@@ -119,7 +119,7 @@ PRODUCER_CONFIG = {
 使用命令行参数运行同步任务：
 
 ```bash
---data_source mongodb --topic temp3 --key my_hash --collection collection  --full_amount True --debug True
+python main.py --data_source mongodb --topic temp3 --key my_hash --collection collection  --full_amount True --debug True
 ```
 
 参数说明：
