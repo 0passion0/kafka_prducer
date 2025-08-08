@@ -1,11 +1,14 @@
 import argparse
+import sys
+
 from cursor_model.mongo_cursor import FileCursorManager
 from producers.mongodb_producer import MongoDBtoKafka
 
-from decorators import log_execution
+from decorators import log_execution, monitor_performance
 
 
 @log_execution
+@monitor_performance
 def full_sync(data_source, topic, key, **kwargs):
     """
     执行指定数据源到Kafka的全量同步
@@ -22,7 +25,7 @@ def full_sync(data_source, topic, key, **kwargs):
             full_amount = kwargs.get('full_amount', False)
             debug = kwargs.get('debug', False)
 
-            cursor_manager = FileCursorManager(collection, topic, key)
+            cursor_manager = FileCursorManager(collection, topic, key)  # 创建游标管理对象
             producer = MongoDBtoKafka(
                 topic=topic, collection=collection, key=key, debug=debug)
 
@@ -39,6 +42,14 @@ def full_sync(data_source, topic, key, **kwargs):
 
 
 def main():
+    sys.argv.extend([
+        '--data_source', 'mongodb',
+        '--topic', 'temp4',
+        '--key', 'my_hash',
+        '--collection', 'book',
+        '--full_amount', 'True',
+        # '--debug', 'True'
+    ])
     parser = argparse.ArgumentParser(description='数据同步到Kafka工具')
     parser.add_argument('--data_source', required=True, help='数据源类型 (如: mongodb)')
     parser.add_argument('--topic', required=True, help='Kafka主题名称')
@@ -61,4 +72,5 @@ def main():
 
 
 if __name__ == "__main__":
+    "--data_source mongodb --topic temp4 --key my_hash --collection book --full_amount True --debug True"
     main()

@@ -5,7 +5,9 @@ Thumbs.db
 
 # 忽略日志文件
 *.log
- 
+
+*.index
+
 # 忽略临时文件
 *.tmp
 
@@ -14,8 +16,8 @@ Thumbs.db
 *.cursor
 
 node_modules/
+docker-compose/data/*
 # 忽略所有 __pycache__ 目录
 __pycache__/
 */__pycache__/
 temp*/*
-

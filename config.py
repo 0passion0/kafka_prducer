@@ -1,5 +1,3 @@
-
-
 MONGODB_DATABASES = {
     "default": {
         "type": "mongodb",
@@ -15,7 +13,7 @@ MONGODB_DATABASES = {
 
 PRODUCER_CONFIG = {
     # Kafka 集群地址列表（ip:port）
-    "bootstrap_servers": ['180.76.250.147:19092','180.76.250.147:19096','180.76.250.147:19100'],
+    "bootstrap_servers": ['127.0.0.1:19092', '127.0.0.1:19096', '127.0.0.1:19100'],
     # 消息压缩方式
     "compression_type": "gzip",
     # 发送失败时的重试次数
@@ -26,9 +24,9 @@ PRODUCER_CONFIG = {
     #   all/-1：等所有 ISR 副本确认（最安全，最慢）
     "acks": 1,
     # 一批消息的字节数阈值，达到该大小或超过 linger_ms 就立即发送
-    "batch_size": 16384,  # 16 KB
+    "batch_size": 512 * 1024,  # 16 KB
     # 消息在客户端缓冲区最多等待多少毫秒再发送（与 batch_size 配合做微批）
-    "linger_ms": 10,
+    "linger_ms": 100,
 
 }
 

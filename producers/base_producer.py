@@ -45,7 +45,7 @@ class BaseKafkaProducer(ABC):
         future = self.producer.send(
             self.topic,
             value=value,
-            key=key.encode('utf-8') if key else None
+            key=key.encode('utf-8') if key else None,
         )
 
         if self.debug:
