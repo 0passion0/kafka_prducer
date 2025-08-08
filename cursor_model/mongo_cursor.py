@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from os.path import join
 
 from config import DEFAULT_CURSOR_FILE_PATH
 from cursor_model.base_cursor import CursorManager
@@ -9,7 +9,10 @@ class FileCursorManager(CursorManager):
     """基于文件的游标管理器"""
 
     def __init__(self, collection, topic, key, file_path: str = None, ):
-        self.file_path = file_path or DEFAULT_CURSOR_FILE_PATH + collection + '_' + topic + '_' + key + '.cursor'
+        file_path = file_path or DEFAULT_CURSOR_FILE_PATH
+
+        base_dir = join(file_path, collection, topic)
+        self.file_path = join(base_dir, f'{key}.cursor')
 
     def load(self, full_amount=False):
         """
