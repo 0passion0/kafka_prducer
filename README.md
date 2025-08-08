@@ -129,6 +129,10 @@ python main.py --data_source mongodb --topic temp3 --key my_hash --collection co
 - `--key`: 用于分区分类的键字段名
 - `--collection`: MongoDB集合名称（仅mongodb数据源需要）
 
+## 工作流程
+
+![数据同步流程图](runtime/mermaid-diagram.png)
+
 ## 工作原理
 
 1. 从状态文件中读取上次同步的位置信息
