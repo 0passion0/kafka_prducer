@@ -1,9 +1,9 @@
-
 import os
 from datetime import datetime
 
 from config import DEFAULT_CURSOR_FILE_PATH
 from cursor_model.base_cursor import CursorManager
+
 
 class FileCursorManager(CursorManager):
     """基于文件的游标管理器"""
@@ -12,11 +12,11 @@ class FileCursorManager(CursorManager):
         self.file_path = file_path or DEFAULT_CURSOR_FILE_PATH
         self.default_cursor = '000000000000000000000000'
 
-    def load(self):
+    def load(self, full_amount=False):
         """
         从文件加载游标
         """
-        if not os.path.exists(self.file_path):
+        if not os.path.exists(self.file_path) or full_amount:
             return self.default_cursor
         with open(self.file_path) as f:
             try:
@@ -36,7 +36,6 @@ class FileCursorManager(CursorManager):
         os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
         with open(self.file_path, "w") as f:
             f.write(str(cursor))
-
 
 # class StateRepository:
 #     """本地增量游标持久化"""
@@ -62,4 +61,3 @@ class FileCursorManager(CursorManager):
 #     def save(self, max_id) -> None:
 #         with open(self.file_path, "w") as f:
 #             f.write("\n" + str(max_id))
-

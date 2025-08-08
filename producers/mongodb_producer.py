@@ -21,6 +21,7 @@ class MongoDBtoKafka(BaseKafkaProducer):
                  topic: str,
                  collection: str,
                  key: str = None,
+                 debug: bool = False,
                  batch_size: int = 1000,
                  producer_config: dict = None):
         """
@@ -33,7 +34,7 @@ class MongoDBtoKafka(BaseKafkaProducer):
         :param producer_config: Kafka生产者配置，可选
         """
 
-        super().__init__(topic, producer_config)
+        super().__init__(topic, producer_config, debug)
         self.collection = collection
         self.batch_size = batch_size
         self.key = key

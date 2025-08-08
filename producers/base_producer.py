@@ -17,7 +17,7 @@ class BaseKafkaProducer(ABC):
 
     logger = get_logger("producer")
 
-    def __init__(self, topic: str, producer_config: dict = None):
+    def __init__(self, topic: str, producer_config: dict = None, debug: bool = False):
         """
         传入 topic 名称，后续 send_message() 均发到该 topic
         """
@@ -25,6 +25,7 @@ class BaseKafkaProducer(ABC):
         # 允许传入特定的生产者配置，如果未提供则使用默认配置
         config = producer_config or PRODUCER_CONFIG
         self.producer = KafkaProducer(**config)
+        self.debug = debug
 
     # ---------------- 公共方法 ----------------
     def send_message(self,
@@ -42,16 +43,17 @@ class BaseKafkaProducer(ABC):
 
         # 异步发送到 Kafka，返回一个 Future 对象
         future = self.producer.send(
-            self.topic, 
+            self.topic,
             value=value,
             key=key.encode('utf-8') if key else None
         )
 
-        # 同步阻塞 （不需要可注释）
-        record_metadata = future.get(timeout=10)
-        self.logger.info(f"[Kafka] 已发送消息：{record_metadata}")
-        # 注意：这里并未调用 future.get() 同步等待结果，追求高吞吐
-        # 如果想每条都同步确认，可改成 future.get(timeout=10)
+        if self.debug:
+            # 同步阻塞 （不需要可注释）
+            record_metadata = future.get(timeout=10)
+            self.logger.info(f"[Kafka] 已发送消息：{record_metadata}")
+            # 注意：这里并未调用 future.get() 同步等待结果，追求高吞吐
+            # 如果想每条都同步确认，可改成 future.get(timeout=10)
 
     def flush_and_close(self, timeout: float = 30.0):
         """

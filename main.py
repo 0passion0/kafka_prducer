@@ -16,24 +16,26 @@ def full_sync(data_source, topic, key, **kwargs):
     :param kwargs: 其他参数
     """
 
-    # 根据数据源类型选择相应的游标管理器和生产者
-    if data_source == 'mongodb':
-        collection = kwargs.get('collection', 'collection')
-        
-        cursor_manager = FileCursorManager()
-        producer = MongoDBtoKafka(
-            topic=topic, collection=collection, key=key)
+    match data_source:
+        case 'mongodb':
+            collection = kwargs.get('collection', 'collection')
+            full_amount = kwargs.get('full_amount', False)
+            debug= kwargs.get('debug', False)
 
-        # 从状态存储中加载上次同步的时间戳
-        last_seen = cursor_manager.load()
+            cursor_manager = FileCursorManager()
+            producer = MongoDBtoKafka(
+                topic=topic, collection=collection, key=key,debug=debug)
 
-        # 执行同步操作并获取本次同步的最大时间戳
-        max_id = producer.sync(last_seen)
+            # 从状态存储中加载上次同步的时间戳
+            load_max_id = cursor_manager.load(full_amount)
 
-        # 保存本次同步的最大时间戳到状态存储
-        cursor_manager.save(max_id)
-    else:
-        raise ValueError(f"不支持的数据源类型: {data_source}")
+            # 执行同步操作并获取本次同步的最大时间戳
+            max_id = producer.sync(load_max_id)
+
+            # 保存本次同步的最大时间戳到状态存储
+            cursor_manager.save(max_id)
+        case _:
+            ValueError(f"Invalid data source: {data_source}")
 
 
 def main():
@@ -42,6 +44,8 @@ def main():
     parser.add_argument('--topic', required=True, help='Kafka主题名称')
     parser.add_argument('--key', required=True, help='用于分区的键字段名')
     parser.add_argument('--collection', help='MongoDB集合名称 (仅mongodb数据源需要)')
+    parser.add_argument('--full_amount', help='是否全量同步（默认增量）')
+    parser.add_argument('--debug', help='同步检查是否正常生产数据')
 
     args = parser.parse_args()
 
@@ -49,6 +53,8 @@ def main():
     kwargs = {}
     if args.collection:
         kwargs['collection'] = args.collection
+        kwargs['full_amount'] = args.full_amount
+        kwargs['debug'] = args.debug
 
     # 执行同步
     full_sync(args.data_source, args.topic, args.key, **kwargs)
