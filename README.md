@@ -119,7 +119,7 @@ PRODUCER_CONFIG = {
 使用命令行参数运行同步任务：
 
 ```bash
-python main.py --data_source mongodb --topic temp3 --key my_hash --collection collection
+--data_source mongodb --topic temp3 --key my_hash --collection collection  --full_amount True --debug True
 ```
 
 参数说明：
@@ -128,7 +128,8 @@ python main.py --data_source mongodb --topic temp3 --key my_hash --collection co
 - `--topic`: Kafka主题名称
 - `--key`: 用于分区分类的键字段名
 - `--collection`: MongoDB集合名称（仅mongodb数据源需要）
-
+- `--full_amount`: 是否全量同步数据（默认False）
+- `--debug`: 是否开启调试模式（默认False）
 ## 工作流程
 
 ![数据同步流程图](runtime/mermaid-diagram.png)
