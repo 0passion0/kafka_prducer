@@ -1,10 +1,12 @@
 # Kafka Producer 数据同步项目
 
-本项目是一个将多种数据源数据同步到 Kafka 的 Python 应用程序。它支持增量同步，能够从各种数据源中读取数据并将数据发送到指定的 Kafka 主题。目前支持 MongoDB 数据源，后续将扩展支持更多数据源。
+本项目是一个将多种数据源数据同步到 Kafka 的 Python 应用程序。它支持增量同步，能够从各种数据源中读取数据并将数据发送到指定的
+Kafka 主题。目前支持 MongoDB 数据源，后续将扩展支持更多数据源。
 
 ## 项目概述
 
-该项目主要用于将各种数据源中的数据实时同步到 Kafka 消息队列中，以便其他系统可以消费这些数据进行进一步处理。项目采用模块化设计，基于抽象基类构建，易于扩展和维护，可以方便地添加新的数据源支持。
+该项目主要用于将各种数据源中的数据实时同步到 Kafka
+消息队列中，以便其他系统可以消费这些数据进行进一步处理。项目采用模块化设计，基于抽象基类构建，易于扩展和维护，可以方便地添加新的数据源支持。
 
 ## 功能特性
 
@@ -34,37 +36,47 @@ kafka_producer/
 │   ├── __init__.py
 │   ├── base_producer.py      # Kafka 生产者的抽象基类
 │   └── mongodb_producer.py   # MongoDB 到 Kafka 的具体实现
-└── cursors/
-    └── mongodb.cursors       # 游标文件，用于记录同步状态
+└── cursor_model/
+    └── base_cursor.py       # 游标基础模块，用于记录同步状态
+    └── mongo_cursor.py       # mongodb游标模块
+└── runtime/
+    └── cursors/
+        └── mongodb.cursors       # mongodb游标模块
 ```
 
 ## 核心组件
 
 ### 数据源管理器
+
 - MongoDB 管理器：单例模式设计，使用连接池管理 MongoDB 连接
 - 易于扩展支持其他数据源管理器（如 MySQL、PostgreSQL 等）
 
 ### Kafka 生产者基类 (BaseKafkaProducer)
+
 - 抽象基类，定义了 Kafka 生产者的基本框架
 - 提供统一的消息发送接口
 - 支持消息转换和序列化功能
 - 子类只需实现特定的抽象方法即可支持新的数据源
 
 ### 装饰器模块 (decorators.py)
+
 - 提供日志记录和性能监控等横切关注点的处理
 - 通过注解方式应用，降低业务代码的侵入性
 
 ### 游标管理 (logger.py)
+
 - 抽象游标管理接口，支持多种游标存储方式
 - 默认实现基于文件的游标管理
 
 ### 具体数据源实现
+
 - MongoDB 到 Kafka 同步器：继承自 BaseKafkaProducer，实现 MongoDB 数据同步逻辑
 - 易于扩展实现其他数据源到 Kafka 的同步器
 
 ## 配置说明
 
 ### MongoDB 配置
+
 ```python
 MONGODB_DATABASES = {
     "default": {
@@ -81,6 +93,7 @@ MONGODB_DATABASES = {
 ```
 
 ### Kafka 配置
+
 ```python
 PRODUCER_CONFIG = {
     "bootstrap_servers": [],
@@ -103,18 +116,11 @@ python main.py --data_source mongodb --topic temp3 --key my_hash --collection co
 ```
 
 参数说明：
+
 - `--data_source`: 数据源类型（当前支持 mongodb）
 - `--topic`: Kafka主题名称
 - `--key`: 用于分区的键字段名
 - `--collection`: MongoDB集合名称（仅mongodb数据源需要）
-
-### 直接运行方式
-
-1. 配置数据源和 Kafka 连接参数（在 [config.py](file:///e:/python/kafka_prducer/config.py) 文件中）
-2. 运行主程序：
-   ```bash
-   python main.py
-   ```
 
 ## 工作原理
 
@@ -130,13 +136,16 @@ python main.py --data_source mongodb --topic temp3 --key my_hash --collection co
 ### 添加新的数据源步骤：
 
 1. 在 `models/` 目录下创建对应数据源的连接管理器
-2. 在 `producers/` 目录下创建继承自 [BaseKafkaProducer](file:///e:/python/kafka_prducer/producers/base_producer.py#L14-L57) 的具体实现类
-3. 实现 [transform()](file:///e:/python/kafka_prducer/producers/base_producer.py#L53-L65) 和 [value_serialize()](file:///e:/python/kafka_prducer/producers/base_producer.py#L67-L77) 抽象方法
+2. 在 `producers/`
+   目录下创建继承自 [BaseKafkaProducer](file:///e:/python/kafka_prducer/producers/base_producer.py#L14-L57) 的具体实现类
+3. 实现 [transform()](file:///e:/python/kafka_prducer/producers/base_producer.py#L53-L65)
+   和 [value_serialize()](file:///e:/python/kafka_prducer/producers/base_producer.py#L67-L77) 抽象方法
 4. 在 [main.py](file:///e:/python/kafka_prducer/main.py) 中添加相应的同步函数
 
 ### 切面化增强
 
 项目通过装饰器实现了切面化处理：
+
 - [@log_execution](file:///e:/python/kafka_prducer/decorators.py#L7-L22) - 自动记录方法执行日志
 - [@monitor_performance](file:///e:/python/kafka_prducer/decorators.py#L25-L41) - 监控方法执行性能
 
