@@ -1,0 +1,85 @@
+services:
+  kafka-1:
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/bitnami/kafka:3.6.2
+    restart: unless-stopped
+    network_mode: host
+    user: root
+    environment:
+      KAFKA_ENABLE_KRAFT: yes
+      KAFKA_KRAFT_CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@127.0.0.1:19093,2@127.0.0.1:19094,3@127.0.0.1:19095
+      KAFKA_CFG_LISTENERS: PLAINTEXT://0.0.0.0:19092,CONTROLLER://0.0.0.0:19093
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://180.76.250.147:19092
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_LOG_DIRS: /bitnami/kafka/data
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      ALLOW_PLAINTEXT_LISTENER: yes
+    volumes:
+      - ./data/kafka-1:/bitnami/kafka/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+  kafka-2:
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/bitnami/kafka:3.6.2
+    restart: unless-stopped
+    network_mode: host
+    user: root
+    environment:
+      KAFKA_ENABLE_KRAFT: yes
+      KAFKA_KRAFT_CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+      KAFKA_CFG_NODE_ID: 2
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@127.0.0.1:19093,2@127.0.0.1:19094,3@127.0.0.1:19095
+      KAFKA_CFG_LISTENERS: PLAINTEXT://0.0.0.0:19096,CONTROLLER://0.0.0.0:19094
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://180.76.250.147:19096
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_LOG_DIRS: /bitnami/kafka/data
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      ALLOW_PLAINTEXT_LISTENER: yes
+    volumes:
+      - ./data/kafka-2:/bitnami/kafka/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+  kafka-3:
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/bitnami/kafka:3.6.2
+    restart: unless-stopped
+    network_mode: host
+    user: root
+    environment:
+      KAFKA_ENABLE_KRAFT: yes
+      KAFKA_KRAFT_CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+      KAFKA_CFG_NODE_ID: 3
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@127.0.0.1:19093,2@127.0.0.1:19094,3@127.0.0.1:19095
+      KAFKA_CFG_LISTENERS: PLAINTEXT://0.0.0.0:19100,CONTROLLER://0.0.0.0:19095
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://180.76.250.147:19100
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_LOG_DIRS: /bitnami/kafka/data
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      ALLOW_PLAINTEXT_LISTENER: yes
+    volumes:
+      - ./data/kafka-3:/bitnami/kafka/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 512M

@@ -1,0 +1,5 @@
+docker compose run --rm kafka-1  kafka-storage.sh format -t MkU3OEVBNTcwNTJENDM2Qk -c /opt/bitnami/kafka/config/kraft/server.properties
+
+docker compose up -d
+
+更换 KAFKA_CFG_ADVERTISED_LISTENERS 的ip地址
