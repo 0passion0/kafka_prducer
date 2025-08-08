@@ -119,7 +119,7 @@ python main.py --data_source mongodb --topic temp3 --key my_hash --collection co
 
 - `--data_source`: 数据源类型（当前支持 mongodb）
 - `--topic`: Kafka主题名称
-- `--key`: 用于分区的键字段名
+- `--key`: 用于分区分类的键字段名
 - `--collection`: MongoDB集合名称（仅mongodb数据源需要）
 
 ## 工作原理
