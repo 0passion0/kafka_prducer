@@ -20,11 +20,11 @@ def full_sync(data_source, topic, key, **kwargs):
         case 'mongodb':
             collection = kwargs.get('collection', 'collection')
             full_amount = kwargs.get('full_amount', False)
-            debug= kwargs.get('debug', False)
+            debug = kwargs.get('debug', False)
 
-            cursor_manager = FileCursorManager()
+            cursor_manager = FileCursorManager(collection, topic, key)
             producer = MongoDBtoKafka(
-                topic=topic, collection=collection, key=key,debug=debug)
+                topic=topic, collection=collection, key=key, debug=debug)
 
             # 从状态存储中加载上次同步的时间戳
             load_max_id = cursor_manager.load(full_amount)

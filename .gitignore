@@ -11,6 +11,8 @@ Thumbs.db
 
 .idea/*
 
+*.cursor
+
 node_modules/
 # 忽略所有 __pycache__ 目录
 __pycache__/

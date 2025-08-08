@@ -8,16 +8,15 @@ from cursor_model.base_cursor import CursorManager
 class FileCursorManager(CursorManager):
     """基于文件的游标管理器"""
 
-    def __init__(self, file_path: str = None):
-        self.file_path = file_path or DEFAULT_CURSOR_FILE_PATH
-        self.default_cursor = '000000000000000000000000'
+    def __init__(self, collection, topic, key, file_path: str = None, ):
+        self.file_path = file_path or DEFAULT_CURSOR_FILE_PATH + collection + '_' + topic + '_' + key + '.cursor'
 
     def load(self, full_amount=False):
         """
         从文件加载游标
         """
         if not os.path.exists(self.file_path) or full_amount:
-            return self.default_cursor
+            return None
         with open(self.file_path) as f:
             try:
                 cursor_str = f.read().strip().splitlines()[-1].strip()
@@ -26,7 +25,7 @@ class FileCursorManager(CursorManager):
                 return cursor_str
             except (IndexError, ValueError):
                 # 文件内容异常也退回默认游标
-                return self.default_cursor
+                return None
 
     def save(self, cursor) -> None:
         """

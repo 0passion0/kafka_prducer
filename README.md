@@ -168,3 +168,7 @@ python main.py --data_source mongodb --topic temp3 --key my_hash --collection co
 3. 增加Web管理界面
 4. 支持定时任务和实时同步模式
 5. 增加更多的监控和告警功能
+
+
+消费端
+1、kafka

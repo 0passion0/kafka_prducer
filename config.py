@@ -32,4 +32,4 @@ PRODUCER_CONFIG = {
 
 }
 
-DEFAULT_CURSOR_FILE_PATH = 'runtime/cursors/mongodb.cursors'
+DEFAULT_CURSOR_FILE_PATH = 'runtime/cursors/mongodb'

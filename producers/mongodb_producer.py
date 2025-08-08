@@ -68,12 +68,13 @@ class MongoDBtoKafka(BaseKafkaProducer):
         :param query: 额外的查询条件，用于过滤需要同步的文档
         :return: 本次同步处理过的最大文档ID
         """
+        cursor_query = {"_id": {"$gt": ObjectId(last_max_id)}} if last_max_id else {}
 
         # 构建查询条件并获取游标
         cursor: Cursor = (
             self.mongodb_manager.db[self.collection]
             .find(
-                filter=(query or {}) | {"_id": {"$gt": ObjectId(last_max_id)}},
+                filter=(query or {}) | cursor_query,
             )
             .sort("_id", 1)
             .batch_size(self.batch_size)
