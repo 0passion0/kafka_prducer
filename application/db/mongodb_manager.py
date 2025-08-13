@@ -5,10 +5,11 @@
 # @User  : Mabin
 # @Description  :MongoDB数据库操作工具类（单例、连接池）
 """
+from bson import ObjectId
 from pymongo import MongoClient
 from threading import Lock
 
-from config import MONGODB_DATABASES
+from application.settings import MONGODB_DATABASES
 
 
 class MongoDBManager:
@@ -76,7 +77,30 @@ class MongoDBManager:
         self.db = self.client[connect_config["database"]]  # 切换至指定数据库
 
 
-if __name__ == '__main__':
-    test_model = MongoDBManager()
+class MongoDBDataStream:
+    mongodb_manager = MongoDBManager()
 
-    print(test_model.client.server_info())
+    def __init__(self, collection, batch_size, sort_key, historical_cursor_position):
+        self.collection = collection
+        self.batch_size = batch_size
+        self.sort_key = sort_key
+        self.historical_cursor_position = historical_cursor_position
+        self.cursor_query = {
+            sort_key: {"$gt": ObjectId(historical_cursor_position)}} if historical_cursor_position else {}
+
+    def get_all(self, query=None):
+        cursor = (self.mongodb_manager.db[self.collection]
+                  .find(
+            filter=(query or {}) | self.cursor_query
+        )
+                  .sort(self.sort_key, 1)
+                  .batch_size(self.batch_size))
+        for doc in cursor:
+            yield doc
+
+
+if __name__ == '__main__':
+    test_model = MongoDBDataStream(collection='raw_information_list', batch_size=1000, sort_key='_id',
+                                      historical_cursor_position='')
+    for doc in test_model.get_all():
+        print(doc)

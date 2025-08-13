@@ -1,6 +1,16 @@
 MONGODB_DATABASES = {
     "default": {
         "type": "mongodb",
+        'user': 'medpeer',
+        'password': 'medpeer',
+        'auth_source': 'admin',  # 认证数据库（必须与用户创建库一致）
+        'host': '192.168.1.245',
+        'port': 27017,
+        'database': 'raw_data_temp',
+        "charset": "utf8mb4"
+    },
+    "my": {
+        "type": "mongodb",
         'user': 'admin',
         'password': r'StrongP@ssw0rd',
         'auth_source': 'admin',  # 认证数据库（必须与用户创建库一致）
@@ -29,5 +39,3 @@ PRODUCER_CONFIG = {
     "linger_ms": 100,
 
 }
-
-DEFAULT_CURSOR_FILE_PATH = 'runtime/cursors/mongodb'

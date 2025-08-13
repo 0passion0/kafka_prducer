@@ -3,6 +3,8 @@ import sys
 import os
 from datetime import datetime
 
+from application.config import LOG_PATH
+
 
 def get_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
@@ -11,7 +13,7 @@ def get_logger(name: str) -> logging.Logger:
     logger.setLevel(logging.INFO)
     
     # 创建日志目录
-    log_dir = os.path.join('runtime', 'log')
+    log_dir = LOG_PATH
     os.makedirs(log_dir, exist_ok=True)
     
     # 创建文件处理器，以日期命名日志文件

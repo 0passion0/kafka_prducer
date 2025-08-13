@@ -3,8 +3,8 @@ from typing import Any, Dict, Optional
 
 from kafka import KafkaProducer
 
-from config import PRODUCER_CONFIG
-from logger import get_logger
+from application.settings import PRODUCER_CONFIG
+from application.utils.logger import get_logger
 
 
 class BaseKafkaProducer(ABC):

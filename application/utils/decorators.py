@@ -1,5 +1,5 @@
 import functools
-from logger import get_logger
+from application.utils.logger import get_logger
 
 
 def log_execution(func):

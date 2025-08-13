@@ -1,12 +1,10 @@
 # Kafka Producer 数据同步项目
 
-本项目是一个将多种数据源数据同步到 Kafka 的 Python 应用程序。它支持增量同步，能够从各种数据源中读取数据并将数据发送到指定的
-Kafka 主题。目前支持 MongoDB 数据源，后续将扩展支持更多数据源。
+本项目是一个将多种数据源数据同步到 Kafka 的 Python 应用程序。它支持增量同步，能够从各种数据源中读取数据并将数据发送到指定的 Kafka 主题。目前支持 MongoDB 数据源，后续将扩展支持更多数据源。
 
 ## 项目概述
 
-该项目主要用于将各种数据源中的数据实时同步到 Kafka
-消息队列中，以便其他系统可以消费这些数据进行进一步处理。项目采用模块化设计，基于抽象基类构建，易于扩展和维护，可以方便地添加新的数据源支持。
+该项目主要用于将各种数据源中的数据实时同步到 Kafka 消息队列中，以便其他系统可以消费这些数据进行进一步处理。项目采用模块化设计，基于抽象基类构建，易于扩展和维护，可以方便地添加新的数据源支持。
 
 ## 功能特性
 
@@ -17,7 +15,6 @@ Kafka 主题。目前支持 MongoDB 数据源，后续将扩展支持更多数�
 - **可扩展架构**：基于抽象基类的设计，易于扩展支持其他数据源
 - **日志记录**：完善的日志记录机制，便于监控和调试
 - **切面化处理**：使用装饰器实现日志记录和性能监控等横切关注点
-- **依赖注入**：通过依赖注入提高代码的可测试性和解耦性
 - **命令行接口**：通过命令行参数灵活配置同步任务
 
 ## 缺点
@@ -31,24 +28,38 @@ Kafka 主题。目前支持 MongoDB 数据源，后续将扩展支持更多数�
 
 ```
 kafka_producer/
-├── config.py                 # 配置文件，包含各种数据源和 Kafka 配置
-├── main.py                   # 主程序入口
-├── logger.py                 # 日志和状态管理模块
-├── decorators.py             # 装饰器模块，处理横切关注点
+├── run.py                    # 程序入口文件
 ├── README.md                 # 项目说明文档
-├── models/
-│   ├── __init__.py
-│   └── mongodb_manager.py    # MongoDB 连接管理器（单例模式）
-├── producers/
-│   ├── __init__.py
-│   ├── base_producer.py      # Kafka 生产者的抽象基类
-│   └── mongodb_producer.py   # MongoDB 到 Kafka 的具体实现
-└── cursor_model/
-    └── base_cursor.py       # 游标基础模块，用于记录同步状态
-    └── mongo_cursor.py       # mongodb游标模块
-└── runtime/
-    └── cursors/
-        └── mongodb.cursors       # mongodb游标模块
+├── requirements.txt          # 项目依赖
+├── application/              # 应用核心代码目录
+│   ├── config.py             # 基础配置
+│   ├── settings.py           # 数据库和Kafka配置
+│   ├── cursor_model/         # 游标管理模块
+│   │   ├── __init__.py
+│   │   ├── base_cursor.py    # 游标管理抽象基类
+│   │   └── mongo_cursor.py   # 文件游标管理实现
+│   ├── db/                   # 数据库连接管理
+│   │   ├── __init__.py
+│   │   └── mongodb_manager.py# MongoDB连接管理器
+│   ├── models/               # 数据结构定义
+│   │   ├── __init__.py
+│   │   ├── base_data_structure.py
+│   │   └── information_data_structure.py
+│   ├── producers/            # Kafka生产者实现
+│   │   ├── __init__.py
+│   │   ├── base_producer.py      # Kafka生产者的抽象基类
+│   │   └── information_to_kafka_producer.py   # 具体的MongoDB到Kafka同步实现
+│   └── utils/                # 工具模块
+│       ├── __init__.py
+│       ├── decorators.py     # 装饰器模块，处理横切关注点
+│       └── logger.py         # 日志模块
+├── runtime/                  # 运行时数据目录
+│   ├── cursors/              # 游标文件存储目录
+│   ├── log/                  # 日志文件目录
+│   ├── temp/                 # 临时文件目录
+│   └── upload/               # 上传文件目录
+└── docker-compose/           # Docker Compose配置
+    └── docker-compose.yml
 ```
 
 ## 核心组件
@@ -70,7 +81,7 @@ kafka_producer/
 - 提供日志记录和性能监控等横切关注点的处理
 - 通过注解方式应用，降低业务代码的侵入性
 
-### 游标管理 (logger.py)
+### 游标管理 (cursor_model)
 
 - 抽象游标管理接口，支持多种游标存储方式
 - 默认实现基于文件的游标管理
@@ -80,95 +91,66 @@ kafka_producer/
 - MongoDB 到 Kafka 同步器：继承自 BaseKafkaProducer，实现 MongoDB 数据同步逻辑
 - 易于扩展实现其他数据源到 Kafka 的同步器
 
+## 运行方式
+
+项目通过命令行参数进行配置和运行：
+
+```bash
+python run.py --topic <kafka_topic> [--full_amount True] [--debug True]
+```
+
+参数说明：
+- `--topic`: Kafka主题名称（必填）
+- `--full_amount`: 是否进行全量同步，默认为增量同步
+- `--debug`: 是否开启调试模式，会打印详细日志
+
+示例：
+```bash
+python run.py --topic temp5 --debug True
+```
+
 ## 配置说明
 
 ### MongoDB 配置
+
+在 [application/settings.py](file:///D:/company_project/kafka_prducer/kafka_prducer/application/settings.py) 文件中配置 MongoDB 连接信息：
 
 ```python
 MONGODB_DATABASES = {
     "default": {
         "type": "mongodb",
-        'user': 'admin',
+        'user': '',
         'password': '',
-        'auth_source': 'admin',
-        'host': '',
+        'auth_source': 'admin',  # 认证数据库（必须与用户创建库一致）
+        'host': '192.168.1.245',
         'port': 27017,
-        'database': 'tlg',
+        'database': 'raw_data_temp',
         "charset": "utf8mb4"
     },
+
 }
 ```
 
 ### Kafka 配置
 
+在 [application/settings.py](file:///D:/company_project/kafka_prducer/kafka_prducer/application/settings.py) 文件中配置 Kafka 连接信息：
+
 ```python
 PRODUCER_CONFIG = {
-    "bootstrap_servers": [],
+    # Kafka 集群地址列表（ip:port）
+    "bootstrap_servers": ['127.0.0.1:19092', '127.0.0.1:19096', '127.0.0.1:19100'],
+    # 消息压缩方式
     "compression_type": "gzip",
+    # 发送失败时的重试次数
     "retries": 5,
+    # 多少个副本确认后才算发送成功：
+    #   0：不等待确认（最快，可能丢数据）
+    #   1：只等 leader 确认（折中）
+    #   all/-1：等所有 ISR 副本确认（最安全，最慢）
     "acks": 1,
-    "batch_size": 16384,
-    "linger_ms": 1000,
+    # 一批消息的字节数阈值，达到该大小或超过 linger_ms 就立即发送
+    "batch_size": 512 * 1024,  # 16 KB
+    # 消息在客户端缓冲区最多等待多少毫秒再发送（与 batch_size 配合做微批）
+    "linger_ms": 100,
 }
 ```
-
-## 使用方法
-
-### 命令行方式（推荐）
-
-使用命令行参数运行同步任务：
-
-```bash
-python main.py --data_source mongodb --topic temp3 --key my_hash --collection collection  --full_amount True --debug True
-```
-
-参数说明：
-
-- `--data_source`: 数据源类型（当前支持 mongodb）
-- `--topic`: Kafka主题名称
-- `--key`: 用于分区分类的键字段名
-- `--collection`: MongoDB集合名称（仅mongodb数据源需要）
-- `--full_amount`: 是否全量同步数据（默认False）
-- `--debug`: 是否开启调试模式（默认False）
-## 工作流程
-
-![数据同步流程图](runtime/mermaid-diagram.png)
-
-## 工作原理
-
-1. 从状态文件中读取上次同步的位置信息
-2. 查询数据源中自上次同步以来的新数据
-3. 将查询到的数据逐条发送到 Kafka 主题
-4. 更新状态文件，记录本次同步的位置信息
-
-## 扩展性
-
-项目采用面向对象设计，易于扩展支持其他数据源：
-
-### 添加新的数据源步骤：
-
-1. 在 `models/` 目录下创建对应数据源的连接管理器
-2. 在 `producers/`
-   目录下创建继承自 [BaseKafkaProducer](file:///e:/python/kafka_prducer/producers/base_producer.py#L14-L57) 的具体实现类
-3. 实现 [transform()](file:///e:/python/kafka_prducer/producers/base_producer.py#L53-L65)
-   和 [value_serialize()](file:///e:/python/kafka_prducer/producers/base_producer.py#L67-L77) 抽象方法
-4. 在 [main.py](file:///e:/python/kafka_prducer/main.py) 中添加相应的同步函数
-
-### 切面化增强
-
-项目通过装饰器实现了切面化处理：
-
-- [@log_execution](file:///e:/python/kafka_prducer/decorators.py#L7-L22) - 自动记录方法执行日志
-- [@monitor_performance](file:///e:/python/kafka_prducer/decorators.py#L25-L41) - 监控方法执行性能
-
-### 未来计划
-
-1. 支持更多数据源（MySQL、PostgreSQL等）
-2. 实现更复杂的游标管理（如数据库存储）
-3. 增加Web管理界面
-4. 支持定时任务和实时同步模式
-5. 增加更多的监控和告警功能
-
-
-消费端
-1、kafka
