@@ -2,7 +2,7 @@ import os
 from os.path import join
 
 from application.config import CURSOR_FILE_PATH
-from application.cursor_model import CursorManager
+from application.cursor_model.base_cursor import CursorManager
 
 
 class FileCursorManager(CursorManager):

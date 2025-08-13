@@ -20,7 +20,7 @@ def main():
     sys.argv.extend([
         '--topic', 'temp5',
         # '--data_type', 'book',
-        # '--full_amount', 'True',
+        '--full_amount', 'True',
         '--debug', 'True'
     ])
     parser = argparse.ArgumentParser(description='数据同步到Kafka工具')

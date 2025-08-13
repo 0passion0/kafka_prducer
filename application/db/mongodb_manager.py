@@ -78,23 +78,60 @@ class MongoDBManager:
 
 
 class MongoDBDataStream:
+    """
+    MongoDB 数据流迭代器类
+    --------------------
+    该类用于从 MongoDB 中按批次顺序读取数据，支持增量同步（基于历史游标位置）。
+    """
+
+    # 共享的 MongoDB 管理器实例（类属性，可减少重复连接开销）
     mongodb_manager = MongoDBManager()
 
-    def __init__(self, collection, batch_size, sort_key, historical_cursor_position):
+    def __init__(self, collection: str, batch_size: int, sort_key: str, historical_cursor_position: str):
+        """
+        初始化 MongoDB 数据流读取器
+
+        :param collection: 目标 MongoDB 集合名称
+        :param batch_size: 每次批量读取的文档数量
+        :param sort_key: 排序字段（一般是 `_id`）
+        :param historical_cursor_position: 历史游标位置（用于增量同步，通常为上次同步的 `_id` 字符串）
+        """
         self.collection = collection
         self.batch_size = batch_size
         self.sort_key = sort_key
         self.historical_cursor_position = historical_cursor_position
-        self.cursor_query = {
-            sort_key: {"$gt": ObjectId(historical_cursor_position)}} if historical_cursor_position else {}
 
-    def get_all(self, query=None):
-        cursor = (self.mongodb_manager.db[self.collection]
-                  .find(
-            filter=(query or {}) | self.cursor_query
+        # 如果存在历史游标，则构造增量条件（大于上次同步的 _id）
+        # 否则返回空条件（表示从头读取）
+        self.cursor_query = {
+            sort_key: {"$gt": ObjectId(historical_cursor_position)}
+        } if historical_cursor_position else {}
+
+    def get_all(self, query: dict = None):
+        """
+        获取符合条件的所有 MongoDB 文档（按排序键递增排序）
+
+        :param query: 额外的 MongoDB 查询条件（与游标条件合并）
+        :return: 生成器，逐条返回文档字典
+
+        **逻辑说明**：
+        1. 将用户传入的查询条件与历史游标条件合并（逻辑 OR：`|`）。
+        2. 按 `sort_key` 升序排序，确保增量读取顺序。
+        3. 使用 `.batch_size()` 控制单次从服务器拉取的文档数，避免内存压力。
+        4. 通过 `yield` 逐条返回文档，适合大规模数据流式处理。
+        """
+        # 构造最终查询条件：query OR 游标条件
+        final_filter = (query or {}) | self.cursor_query
+
+        # MongoDB 游标对象（按 sort_key 升序，批量读取）
+        cursor = (
+            self.mongodb_manager.db[self.collection]
+            .find(filter=final_filter)
+            .sort(self.sort_key, 1)   # 升序排序
+            .batch_size(self.batch_size)  # 设置批量大小
         )
-                  .sort(self.sort_key, 1)
-                  .batch_size(self.batch_size))
+
+        # 流式返回文档
         for doc in cursor:
             yield doc
 
