@@ -1,7 +1,5 @@
-import json
-
-from application.models.base_data_structure import DataStructure
-from typing import Any, ClassVar, Dict, List
+from application.models.kafka_models.base_data_structure import DataStructure
+from typing import ClassVar, Dict
 
 
 class InformationDataStructure(DataStructure):

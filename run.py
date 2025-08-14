@@ -7,25 +7,30 @@ from application.utils.decorators import log_execution, monitor_performance
 
 @log_execution
 @monitor_performance
-def full_sync(topic, **kwargs):
+def full_sync(topic, data_type, **kwargs):
     full_amount = kwargs.get('full_amount', False)
     debug = kwargs.get('debug', False)
 
-    producer = InformationtoKafkaProducer(
-        topic=topic, full_amount=full_amount, debug=debug)
-    producer.sync()
+    match data_type:
+        case 'information':
+            producer = InformationtoKafkaProducer(
+                topic=topic, full_amount=full_amount, debug=debug
+            )
+            producer.sync()
+        case _:
+            raise ValueError(f'不支持的数据源：{topic}')
 
 
 def main():
     sys.argv.extend([
         '--topic', 'temp4',
-        # '--data_type', 'book',
+        '--data_type', 'information',
         '--full_amount', 'True',
         '--debug', 'True'
     ])
     parser = argparse.ArgumentParser(description='数据同步到Kafka工具')
     parser.add_argument('--topic', required=True, help='Kafka主题名称')
-    # parser.add_argument('--data_type', required=True, help='主题下的类型（默认全选）')
+    parser.add_argument('--data_type', required=True, help='主题下的类型（默认全选）')
     parser.add_argument('--full_amount', help='是否全量同步（默认增量）')
     parser.add_argument('--debug', help='同步检查是否正常生产数据')
 
@@ -38,7 +43,7 @@ def main():
         kwargs['debug'] = args.debug
 
     # 执行同步
-    full_sync(args.topic, **kwargs)
+    full_sync(args.topic, args.data_type, **kwargs)
 
 
 if __name__ == "__main__":

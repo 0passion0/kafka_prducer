@@ -3,7 +3,7 @@ from bson import ObjectId
 
 from application.cursor_model.mongo_cursor import FileCursorManager
 from application.db.mongodb_manager import MongoDBManager, MongoDBDataStream
-from application.models.information_data_structure import InformationDataStructure
+from application.models.kafka_models.information_data_structure import InformationDataStructure
 from application.producers.base_producer import BaseKafkaProducer
 
 
@@ -52,6 +52,17 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
             sort_key=self.sort_key,
             historical_cursor_position=self.cursor.load()  # 加载历史游标位置
         )
+    def sync(self, query: Dict[str, Any] = None) -> None:
+        """
+        同步数据：从 MongoDB 按批读取并发送到 Kafka
+
+        :param query: MongoDB 查询条件
+        """
+        for doc in self.mongodb_stream.get_all(query=query):
+            self.send_message(doc)
+            # 更新游标位置
+            self.mongodb_stream.historical_cursor_position = doc.get(self.sort_key)
+
 
     # ---------- 实现父类抽象方法 ----------
     def transform(self, doc: Dict[str, Any]) -> Dict[str, Any]:
@@ -106,17 +117,6 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
             }
         )
         return info.to_json()
-
-    def sync(self, query: Dict[str, Any] = None) -> None:
-        """
-        同步数据：从 MongoDB 按批读取并发送到 Kafka
-
-        :param query: MongoDB 查询条件
-        """
-        for doc in self.mongodb_stream.get_all(query=query):
-            self.send_message(doc)
-            # 更新游标位置
-            self.mongodb_stream.historical_cursor_position = doc.get(self.sort_key)
 
     def __del__(self):
         """

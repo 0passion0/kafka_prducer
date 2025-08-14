@@ -16,6 +16,7 @@
 - **日志记录**：完善的日志记录机制，便于监控和调试
 - **切面化处理**：使用装饰器实现日志记录和性能监控等横切关注点
 - **命令行接口**：通过命令行参数灵活配置同步任务
+- **结构化数据模型**：使用 Pydantic 定义严格的数据结构模型，确保数据一致性
 
 ## 缺点
 
@@ -43,8 +44,10 @@ kafka_producer/
 │   │   └── mongodb_manager.py# MongoDB连接管理器
 │   ├── models/               # 数据结构定义
 │   │   ├── __init__.py
-│   │   ├── base_data_structure.py
-│   │   └── information_data_structure.py
+│   │   └── kafka_models/     # Kafka数据模型
+│   │       ├── __init__.py
+│   │       ├── base_data_structure.py          # 基础数据结构模型
+│   │       └── information_data_structure.py   # 资讯类数据结构模型
 │   ├── producers/            # Kafka生产者实现
 │   │   ├── __init__.py
 │   │   ├── base_producer.py      # Kafka生产者的抽象基类
@@ -55,9 +58,7 @@ kafka_producer/
 │       └── logger.py         # 日志模块
 ├── runtime/                  # 运行时数据目录
 │   ├── cursors/              # 游标文件存储目录
-│   ├── log/                  # 日志文件目录
-│   ├── temp/                 # 临时文件目录
-│   └── upload/               # 上传文件目录
+│   └── log/                  # 日志文件目录
 └── docker-compose/           # Docker Compose配置
     └── docker-compose.yml
 ```
@@ -86,6 +87,12 @@ kafka_producer/
 - 抽象游标管理接口，支持多种游标存储方式
 - 默认实现基于文件的游标管理
 
+### 数据结构模型 (models/kafka_models)
+
+- 基于 Pydantic 的数据结构模型，确保数据一致性和有效性
+- 支持数据序列化为 JSON 格式
+- 可扩展支持不同类型的数据结构
+
 ### 具体数据源实现
 
 - MongoDB 到 Kafka 同步器：继承自 BaseKafkaProducer，实现 MongoDB 数据同步逻辑
@@ -96,17 +103,18 @@ kafka_producer/
 项目通过命令行参数进行配置和运行：
 
 ```bash
-python run.py --topic <kafka_topic> [--full_amount True] [--debug True]
+python run.py --topic <kafka_topic> --data_type <data_type> [--full_amount True] [--debug True]
 ```
 
 参数说明：
 - `--topic`: Kafka主题名称（必填）
+- `--data_type`: 数据类型（必填）
 - `--full_amount`: 是否进行全量同步，默认为增量同步
 - `--debug`: 是否开启调试模式，会打印详细日志
 
 示例：
 ```bash
-python run.py --topic temp5 --debug True
+python run.py --topic temp5 --data_type information --debug True
 ```
 
 ## 配置说明
@@ -151,6 +159,6 @@ PRODUCER_CONFIG = {
     # 一批消息的字节数阈值，达到该大小或超过 linger_ms 就立即发送
     "batch_size": 512 * 1024,  # 16 KB
     # 消息在客户端缓冲区最多等待多少毫秒再发送（与 batch_size 配合做微批）
-    "linger_ms": 100,
+    "linger_ms": 1000,
 }
 ```
