@@ -18,7 +18,7 @@ def full_sync(topic, **kwargs):
 
 def main():
     sys.argv.extend([
-        '--topic', 'temp5',
+        '--topic', 'temp4',
         # '--data_type', 'book',
         '--full_amount', 'True',
         '--debug', 'True'

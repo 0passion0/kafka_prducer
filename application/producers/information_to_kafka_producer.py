@@ -85,6 +85,7 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
             uid=message.get('uid'),
             name=message.get('info_name', ''),
             created_at=message.get('create_time', ''),
+            menu_list=message.get('column_info', []),
             data={
                 "info_date": message.get('info_date', ''),
                 "info_section": message.get('info_section', ''),
@@ -113,8 +114,7 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
         :param query: MongoDB 查询条件
         """
         for doc in self.mongodb_stream.get_all(query=query):
-            transformed_doc = self.transform(doc)
-            self.send_message(transformed_doc)
+            self.send_message(doc)
             # 更新游标位置
             self.mongodb_stream.historical_cursor_position = doc.get(self.sort_key)
 

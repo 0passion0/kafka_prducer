@@ -1,3 +1,5 @@
+import json
+
 from application.models.base_data_structure import DataStructure
 from typing import Any, ClassVar, Dict, List
 
@@ -39,6 +41,7 @@ class InformationDataStructure(DataStructure):
             "info_section": list,  # 资讯正文的段落内容，纯文本格式
             "info_author": str,  # 资讯作者名称
             "info_source": str,  # 资讯来源，提供信息出处
+
         },
         "metadata": {
             "raw_html": str,  # 资讯的原始HTML代码，未经处理的页面内容

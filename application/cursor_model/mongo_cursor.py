@@ -1,3 +1,4 @@
+import json
 import os
 from os.path import join
 
@@ -7,7 +8,6 @@ from application.cursor_model.base_cursor import CursorManager
 
 class FileCursorManager(CursorManager):
     """基于文件的游标管理器"""
-
     def __init__(self, collection, topic, full_amount=False, root_file_path: str = None, ):
         root_file_path = root_file_path or CURSOR_FILE_PATH
 
