@@ -8,6 +8,19 @@ from application.utils.decorators import log_execution, monitor_performance
 @log_execution
 @monitor_performance
 def full_sync(topic, data_type, **kwargs):
+    """
+    同步数据到Kafka
+    
+    Args:
+        topic (str): Kafka主题名称
+        data_type (str): 数据类型，目前支持 'information'
+        **kwargs: 其他参数
+            full_amount (bool): 是否全量同步，默认False（增量同步）
+            debug (bool): 是否开启调试模式，默认False
+    
+    Raises:
+        ValueError: 当data_type不被支持时抛出异常
+    """
     full_amount = kwargs.get('full_amount', False)
     debug = kwargs.get('debug', False)
 

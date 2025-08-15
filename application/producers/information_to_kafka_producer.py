@@ -1,7 +1,7 @@
 from typing import Dict, Any
 from bson import ObjectId
 
-from application.cursor_model.mongo_cursor import FileCursorManager
+from application.cursor_model.file_cursor import FileCursorManager
 from application.db.mongodb_manager import MongoDBManager, MongoDBDataStream
 from application.models.kafka_models.information_data_structure import InformationDataStructure
 from application.producers.base_producer import BaseKafkaProducer

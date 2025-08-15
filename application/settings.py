@@ -23,7 +23,7 @@ MONGODB_DATABASES = {
 
 PRODUCER_CONFIG = {
     # Kafka 集群地址列表（ip:port）
-    "bootstrap_servers": ['127.0.0.1:19092', '127.0.0.1:19096', '127.0.0.1:19100'],
+    "bootstrap_servers": ['180.76.250.147:19092', '180.76.250.147:19096', '180.76.250.147:19100'],
     # 消息压缩方式
     "compression_type": "gzip",
     # 发送失败时的重试次数
