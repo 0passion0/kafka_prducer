@@ -38,7 +38,7 @@ kafka_producer/
 │   ├── cursor_model/         # 游标管理模块
 │   │   ├── __init__.py
 │   │   ├── base_cursor.py    # 游标管理抽象基类
-│   │   └── mongo_cursor.py   # 文件游标管理实现
+│   │   └── file_cursor.py   # 文件游标管理实现
 │   ├── db/                   # 数据库连接管理
 │   │   ├── __init__.py
 │   │   └── mongodb_manager.py# MongoDB连接管理器
