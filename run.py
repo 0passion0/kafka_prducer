@@ -39,7 +39,7 @@ def main():
         '--topic', 'temp4',
         '--data_type', 'information',
         '--full_amount', 'True',
-        '--debug', 'True'
+        # '--debug', 'True'
     ])
     parser = argparse.ArgumentParser(description='数据同步到Kafka工具')
     parser.add_argument('--topic', required=True, help='Kafka主题名称')

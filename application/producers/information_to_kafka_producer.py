@@ -60,10 +60,15 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
 
         :param query: MongoDB 查询条件
         """
-        for doc in self.mongodb_stream.get_all(query=query):
-            self.send_message(doc)
-            # 更新游标位置
-            self.mongodb_stream.historical_cursor_position = doc.get(self.sort_key)
+        try:
+            for doc in self.mongodb_stream.get_all(query=query):
+                self.send_message(doc)
+                # 更新游标位置
+                self.mongodb_stream.historical_cursor_position = doc.get(self.sort_key)
+        except Exception as e:
+            raise e
+        finally:
+            self.cursor.save(self.mongodb_stream.historical_cursor_position)
 
     # ---------- 实现父类抽象方法 ----------
     def transform(self, doc: Dict[str, Any]) -> Dict[str, Any]:
@@ -103,6 +108,7 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
             data={
                 "info_date": message.get('info_date', ''),
                 # "info_section": message.get('info_section', ''),
+                'info_section': [],
                 "info_author": message.get('info_author', ''),
                 "info_source": message.get('info_source', ''),
                 'description': message.get('description', ''),
@@ -118,9 +124,3 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
             }
         )
         return info.to_json()
-
-    def __del__(self):
-        """
-        析构方法：保存当前游标位置，保证下次同步时可从断点续传
-        """
-        self.cursor.save(self.mongodb_stream.historical_cursor_position)
