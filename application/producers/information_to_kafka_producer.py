@@ -1,3 +1,4 @@
+import json
 from typing import Dict, Any
 from bson import ObjectId
 
@@ -52,6 +53,7 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
             sort_key=self.sort_key,
             historical_cursor_position=self.cursor.load()  # 加载历史游标位置
         )
+
     def sync(self, query: Dict[str, Any] = None) -> None:
         """
         同步数据：从 MongoDB 按批读取并发送到 Kafka
@@ -62,7 +64,6 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
             self.send_message(doc)
             # 更新游标位置
             self.mongodb_stream.historical_cursor_position = doc.get(self.sort_key)
-
 
     # ---------- 实现父类抽象方法 ----------
     def transform(self, doc: Dict[str, Any]) -> Dict[str, Any]:
@@ -96,20 +97,20 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
             uid=message.get('uid'),
             name=message.get('info_name', ''),
             created_at=message.get('create_time', ''),
-            menu_list=message.get('column_info', []),
+            tag_code=message.get('tag_code', ''),
+            tag_values=json.dumps(message.get('column_info', [])),
+
             data={
                 "info_date": message.get('info_date', ''),
-                "info_section": message.get('info_section', ''),
+                # "info_section": message.get('info_section', ''),
                 "info_author": message.get('info_author', ''),
                 "info_source": message.get('info_source', ''),
+                'description': message.get('description', ''),
             },
             metadata={
-                "raw_html": message.get('raw_html'),
-                "info_html": message.get('info_html'),
                 "marc_code": message.get('marc_code'),
                 "main_site": message.get('main_site'),
                 "details_page": message.get('details_page', ''),
-                "resource_label": message.get('resource_label', '') or '',
             },
             affiliated_data={
                 "link_data": message.get('link_data') or [],
