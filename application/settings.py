@@ -6,7 +6,7 @@ MONGODB_DATABASES = {
         'auth_source': 'admin',  # 认证数据库（必须与用户创建库一致）
         'host': '192.168.1.245',
         'port': 27017,
-        'database': 'raw_data_temp',
+        'database': 'raw_data',
         "charset": "utf8mb4"
     },
     "my": {

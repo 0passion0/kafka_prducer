@@ -19,10 +19,10 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
     :ivar data_type: 数据类型标识
     """
     mongodb_manager = MongoDBManager()
-    collection = 'raw_information_list'
+    collection = 'raw_information_temp_list'
     sort_key = '_id'
     batch_size = 1000
-    data_type = "informationto"
+    data_type = "information_nsfc"
 
     def __init__(self,
                  topic: str,
@@ -86,6 +86,10 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
         if 'create_time' in doc and doc['create_time'] is not None:
             doc['create_time'] = str(doc['create_time'])
 
+        # 确保 create_time 为字符串格式（避免 datetime 类型在 JSON 序列化时报错）
+        if 'info_date' in doc and doc['info_date'] is not None:
+            doc['info_date'] = str(doc['info_date']).replace('来源：', '').replace('日期', '').replace(' ', '')
+
         return doc
 
     def value_serialize(self, message: Dict[str, Any]) -> bytes:
@@ -102,25 +106,17 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
             uid=message.get('uid'),
             name=message.get('info_name', ''),
             created_at=message.get('create_time', ''),
-            tag_code=message.get('tag_code', ''),
             tag_values=json.dumps(message.get('column_info', [])),
-
+            link_data=message.get('link_data') or [],
             data={
                 "info_date": message.get('info_date', ''),
-                # "info_section": message.get('info_section', ''),
-                'info_section': [],
+                "info_section": message.get('info_section', ''),
                 "info_author": message.get('info_author', ''),
-                "info_source": message.get('info_source', ''),
                 'description': message.get('description', ''),
             },
             metadata={
                 "marc_code": message.get('marc_code'),
-                "main_site": message.get('main_site'),
-                "details_page": message.get('details_page', ''),
+                "details_page": message.get('page_url', ''),
             },
-            affiliated_data={
-                "link_data": message.get('link_data') or [],
-                "files": message.get('files', ''),
-            }
         )
         return info.to_json()
