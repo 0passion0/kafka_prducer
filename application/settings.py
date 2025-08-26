@@ -1,3 +1,35 @@
+# 数据库配置
+MYSQL_DATABASES = {
+    "xxx": {
+        "type": "mysql",
+        'user': 'medpeer',
+        'password': 'medpeer',
+        'host': '192.168.1.245',
+        'port': 3306,
+        'database': 'raw_data',
+        "charset": "utf8mb4"
+    },
+    "default": {
+        "type": "mysql",
+        'user': 'root',
+        'password': 'Btlg2002',
+        'host': '127.0.0.1',
+        'port': 3306,
+        'database': 'info',
+        "charset": "utf8mb4"
+    },
+    "default1": {
+        "type": "mysql",
+        'user': 'root',
+        'password': 'Btlg2002',
+        'host': '127.0.0.1',
+        'port': 3306,
+        'database': 'nfsc',
+        "charset": "utf8mb4"
+    },
+}
+
+
 MONGODB_DATABASES = {
     "default": {
         "type": "mongodb",

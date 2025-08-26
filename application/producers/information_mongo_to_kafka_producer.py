@@ -3,7 +3,7 @@ from typing import Dict, Any
 from bson import ObjectId
 
 from application.cursor_model.file_cursor import FileCursorManager
-from application.db.mongodb_manager import MongoDBManager, MongoDBDataStream
+from application.db.MongoDBManager import MongoDBManager, MongoDBDataStream
 from application.models.kafka_models.information_data_structure import InformationDataStructure
 from application.producers.base_producer import BaseKafkaProducer
 
@@ -19,7 +19,7 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
     :ivar data_type: 数据类型标识
     """
     mongodb_manager = MongoDBManager()
-    collection = 'raw_information_temp_list'
+    collection = 'raw_information_list_temp'
     sort_key = '_id'
     batch_size = 1000
     data_type = "information_nsfc"
@@ -89,6 +89,9 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
         # 确保 create_time 为字符串格式（避免 datetime 类型在 JSON 序列化时报错）
         if 'info_date' in doc and doc['info_date'] is not None:
             doc['info_date'] = str(doc['info_date']).replace('来源：', '').replace('日期', '').replace(' ', '')
+
+        if 'info_source' in doc and doc['info_source'] is not None:
+            doc['info_source'] = str(doc['info_source']).replace('作者：', '').replace('日期', '').replace(' ', '')
 
         return doc
 

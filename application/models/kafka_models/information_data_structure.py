@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 
 from application.models.kafka_models.base_data_structure import DataStructure
@@ -17,10 +17,10 @@ class DataPayload(BaseModel):
         info_source (str): 资讯来源
         description (str): 资讯描述
     """
-    info_date: str
+    info_date: Optional[str] = None
     info_section: List[Any] = Field(default_factory=list)
-    info_author: str
-    description: str
+    info_author: Optional[str] = None
+    description: Optional[str] = None
 
 
 # ---------- 子模型：metadata ----------

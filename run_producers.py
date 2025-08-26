@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from application.producers.information_to_kafka_producer import InformationtoKafkaProducer
+from application.producers.information_mongo_to_kafka_producer import InformationtoKafkaProducer
 from application.utils.decorators import log_execution, monitor_performance
 
 
@@ -39,7 +39,7 @@ def main():
         '--topic', 'temp4',
         '--data_type', 'information',
         '--full_amount', 'True',
-        # '--debug', 'True'
+        '--debug', 'True'
     ])
     parser = argparse.ArgumentParser(description='数据同步到Kafka工具')
     parser.add_argument('--topic', required=True, help='Kafka主题名称')

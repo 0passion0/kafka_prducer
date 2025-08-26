@@ -17,6 +17,7 @@
 - **切面化处理**：使用装饰器实现日志记录和性能监控等横切关注点
 - **命令行接口**：通过命令行参数灵活配置同步任务
 - **结构化数据模型**：使用 Pydantic 定义严格的数据结构模型，确保数据一致性
+- **数据迁移功能**：支持将数据从一个源迁移到另一个源
 
 ## 缺点
 
@@ -29,7 +30,8 @@
 
 ```
 kafka_producer/
-├── run.py                    # 程序入口文件
+├── run_producers.py           # 数据同步程序入口文件
+├── run_migrate.py             # 数据迁移程序入口文件
 ├── README.md                 # 项目说明文档
 ├── requirements.txt          # 项目依赖
 ├── application/              # 应用核心代码目录
@@ -41,7 +43,13 @@ kafka_producer/
 │   │   └── file_cursor.py   # 文件游标管理实现
 │   ├── db/                   # 数据库连接管理
 │   │   ├── __init__.py
-│   │   └── mongodb_manager.py# MongoDB连接管理器
+│   │   ├── BaseMysqlModel.py # MySQL基础模型
+│   │   ├── MongoDBManager.py # MongoDB连接管理器
+│   │   ├── info/             # 信息数据库模型
+│   │   └── nfsc/             # NFSC数据库模型
+│   ├── migrate/              # 数据迁移模块
+│   │   ├── __init__.py
+│   │   └── migrate_to_nfsc.py# NFSC数据迁移实现
 │   ├── models/               # 数据结构定义
 │   │   ├── __init__.py
 │   │   └── kafka_models/     # Kafka数据模型
@@ -50,8 +58,8 @@ kafka_producer/
 │   │       └── information_data_structure.py   # 资讯类数据结构模型
 │   ├── producers/            # Kafka生产者实现
 │   │   ├── __init__.py
-│   │   ├── base_producer.py      # Kafka生产者的抽象基类
-│   │   └── information_to_kafka_producer.py   # 具体的MongoDB到Kafka同步实现
+│   │   ├── base_producer.py                   # Kafka生产者的抽象基类
+│   │   └── information_mongo_to_kafka_producer.py # 具体的MongoDB到Kafka同步实现
 │   └── utils/                # 工具模块
 │       ├── __init__.py
 │       ├── decorators.py     # 装饰器模块，处理横切关注点
@@ -68,14 +76,14 @@ kafka_producer/
 ### 数据源管理器
 
 - MongoDB 管理器：单例模式设计，使用连接池管理 MongoDB 连接
-- 易于扩展支持其他数据源管理器（如 MySQL、PostgreSQL 等）
+- MySQL 管理器：使用连接池管理 MySQL 连接
+- 易于扩展支持其他数据源管理器（如 PostgreSQL 等）
 
 ### Kafka 生产者基类 (BaseKafkaProducer)
 
 - 抽象基类，定义了 Kafka 生产者的基本框架
 - 提供统一的消息发送接口
 - 支持消息转换和序列化功能
-- 子类只需实现特定的抽象方法即可支持新的数据源
 
 ### 装饰器模块 (decorators.py)
 
@@ -98,12 +106,21 @@ kafka_producer/
 - MongoDB 到 Kafka 同步器：继承自 BaseKafkaProducer，实现 MongoDB 数据同步逻辑
 - 易于扩展实现其他数据源到 Kafka 的同步器
 
+### 数据迁移模块
+
+- 支持将数据从一个源迁移到另一个源
+- 基于基类和子类的层次结构设计，易于扩展
+
 ## 运行方式
 
-项目通过命令行参数进行配置和运行：
+项目有两种运行模式：数据同步和数据迁移。
+
+### 数据同步
+
+通过命令行参数进行配置和运行：
 
 ```bash
-python run.py --topic <kafka_topic> --data_type <data_type> [--full_amount True] [--debug True]
+python run_producers.py --topic <kafka_topic> --data_type <data_type> [--full_amount True] [--debug True]
 ```
 
 参数说明：
@@ -114,7 +131,23 @@ python run.py --topic <kafka_topic> --data_type <data_type> [--full_amount True]
 
 示例：
 ```bash
-python run.py --topic temp5 --data_type information --debug True
+python run_producers.py --topic temp5 --data_type information --debug True
+```
+
+### 数据迁移
+
+通过命令行参数指定迁移任务：
+
+```bash
+python run_migrate.py --task <task_name>
+```
+
+参数说明：
+- `--task`: 迁移任务名称（必填）
+
+示例：
+```bash
+python run_migrate.py --task nfsc_task
 ```
 
 ## 配置说明

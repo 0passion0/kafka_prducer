@@ -2,6 +2,7 @@ import logging
 import sys
 import os
 from datetime import datetime
+import multiprocessing
 
 from application.config import LOG_PATH
 
@@ -16,8 +17,8 @@ def get_logger(name: str) -> logging.Logger:
     log_dir = LOG_PATH
     os.makedirs(log_dir, exist_ok=True)
     
-    # 创建文件处理器，以日期命名日志文件
-    log_filename = datetime.now().strftime('%Y-%m-%d') + '.log'
+    # 创建文件处理器，以日期命名日志文件，并包含进程ID以实现多进程隔离
+    log_filename = datetime.now().strftime('%Y-%m-%d') + f'_{os.getpid()}.log'
     file_handler = logging.FileHandler(os.path.join(log_dir, log_filename), encoding='utf-8')
     file_formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s")
     file_handler.setFormatter(file_formatter)
