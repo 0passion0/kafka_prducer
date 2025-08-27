@@ -17,5 +17,5 @@ class NfscInformationSectionList(BaseMysqlModel):
     md5_encode = CharField(index=True)
 
     class Meta:
-        table_name = 'nfsc_information_section_list'
+        table_name = 'nfsc_fund_information_section_list'
         database = get_database_connection('default1')  # 使用默认数据库

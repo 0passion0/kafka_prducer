@@ -2,7 +2,6 @@ import argparse
 import sys
 
 from application.migrate.migrate_to_nfsc import MigrateToNfsc
-from application.producers.information_mongo_to_kafka_producer import InformationtoKafkaProducer
 from application.utils.decorators import log_execution, monitor_performance
 
 

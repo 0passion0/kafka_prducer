@@ -8,6 +8,7 @@ from application.db.nfsc.NfscInfoList import NfscInfoList
 from application.db.nfsc.NfscInfoType import NfscInfoType
 from application.db.nfsc.NfscInformationSectionList import NfscInformationSectionList
 from application.db.nfsc.NfscResourceSource import NfscResourceSource
+from application.db.nfsc.NsfcPublishProjectCodeDict import NsfcPublishProjectCodeDict
 from application.utils.logger import get_logger
 
 
@@ -24,6 +25,8 @@ class MigrateToNfsc:
         self.source_ids = self.get_source_ids()
         # 获取需要迁移的所有信息ID
         self.information_ids = self.get_information_ids()
+
+        self.nfsc_info_departments_dict = self.get_information_departments_dict()
         self.logger.info(
             f"初始化完成，待迁移信息数量: {len(self.information_ids)}")
 
@@ -56,7 +59,7 @@ class MigrateToNfsc:
             InformationList.information_id).where(InformationList.source_id.in_(source_ids)))
 
         # 获取已经存在于NFSC中的信息ID
-        info_ids = set(record.info_id for record in NfscInfoList.select(NfscInfoList.info_id).where(
+        info_ids = set(record.info_id for record in NfscInfoList.select(NfscInfoList.information_id).where(
             NfscInfoList.source_id.in_(source_ids)))
 
         # 返回需要迁移的信息ID，排除已经存在的
@@ -113,14 +116,12 @@ class MigrateToNfsc:
         """
         self.logger.info("开始处理信息数据")
         result_data_list = []  # 存储迁移结果的数据列表
-
         info_count = 0
         for record in information_list:
             info_if = record.information_id  # 信息ID
             info_name = record.information_name['zh']  # 信息名称（中文）
             original_link = record.original_link  # 原始链接
             publish_date = record.publish_date  # 发布日期
-            project_type_id = '1'  # 项目类型ID，暂时固定为'1'
             info_academic_field = ''  # 学术领域，初始为空
             info_type_id = ''  # 信息类型ID，初始为空
             source_id = record.source_id  # 资源源ID
@@ -139,14 +140,13 @@ class MigrateToNfsc:
             info_count += 1
             # 将处理后的信息数据添加到结果列表
             result_data_list.append({
-                'info_id': info_if,
+                'information_id': info_if,
+                'info_type_id': info_type_id,
+                'apply_code': self.nfsc_info_departments_dict.get(info_academic_field) if info_academic_field else None,
+                'source_id': source_id,
                 'info_name': info_name,
                 'original_link': original_link,
                 'publish_time': str(publish_date),
-                'project_type_id': project_type_id,
-                'info_academic_field': info_academic_field,
-                'info_type_id': info_type_id,
-                'source_id': source_id
             })
 
             if info_count % 1000 == 0:
@@ -186,6 +186,14 @@ class MigrateToNfsc:
         except Exception as e:
             self.logger.error(f"数据迁移过程中发生错误: {str(e)}", exc_info=True)
             raise
+
+    def get_information_departments_dict(self):
+        nfsc_info_departments_dict = {}
+        nfsc_info_dep = NsfcPublishProjectCodeDict.select(NsfcPublishProjectCodeDict.apply_code,
+                                                          NsfcPublishProjectCodeDict.code_name)
+        for record in nfsc_info_dep:
+            nfsc_info_departments_dict[record.code_name] = record.apply_code
+        return nfsc_info_departments_dict
 
 
 if __name__ == '__main__':

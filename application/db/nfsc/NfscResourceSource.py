@@ -13,5 +13,5 @@ class NfscResourceSource(BaseMysqlModel):
     source_intro = CharField(null=True)
 
     class Meta:
-        table_name = 'nfsc_resource_source'
+        table_name = 'nfsc_fund_resource_source'
         database = get_database_connection('default1')  # 使用默认数据库
