@@ -105,20 +105,20 @@ class BaseMigrate:
         """
         pass
 
-    def get_exclude_ids(self):
+    def get_exclude_ids(self)-> set[str]:
         """
         获取需要排除的 `information_id` 列表。
 
         :return: 待排除的 information_id 列表
         :rtype: list
         """
-        return []
+        return {}
 
-    def get_exclude_source_ids(self):
+    def get_exclude_source_ids(self)-> set[str]:
         """
         获取需要排除的 `source_id` 列表。
 
         :return: 待排除的 source_id 列表
         :rtype: list
         """
-        return []
+        return {}

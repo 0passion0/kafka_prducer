@@ -49,7 +49,7 @@ class MigrateToNsfc(BaseMigrate):
             result_data_list.append({
                 'information_id': info_if,
                 'info_type_id': info_type_id,
-                'apply_code': nsfc_info_departments_dict.get(info_academic_field,"*") if info_academic_field else None,
+                'apply_code': nsfc_info_departments_dict.get(info_academic_field, "*") if info_academic_field else None,
                 'source_id': source_id,
                 'info_name': info_name,
                 'original_link': original_link,
@@ -75,34 +75,34 @@ class MigrateToNsfc(BaseMigrate):
         information_section_list_data = list(information_section_list)
         NsfcInfoSectionList.insert_many(information_section_list_data).execute()
 
-    def get_exclude_ids(self):
+    def get_exclude_ids(self) -> set[str]:
         """
         获取需要排除的 `information_id` 列表。
 
         :return: 待排除的 information_id 列表
-        :rtype: list
+        :rtype: set
         """
         exclude_ids = NsfcInfoList.select(NsfcInfoList.information_id)
         return set(record.information_id for record in exclude_ids)
 
-    def get_exclude_source_ids(self):
+    def get_exclude_source_ids(self) -> set[str]:
         """
         获取需要排除的 `source_id` 列表。
 
         :return: 待排除的 source_id 列表
-        :rtype: list
+        :rtype: set
         """
         exclude_source_ids = NsfcResourceSourceDict.select(NsfcResourceSourceDict.source_id)
         return set(record.source_id for record in exclude_source_ids)
 
     @staticmethod
     def get_information_departments_dict():
-        Nsfc_info_departments_dict = {}
-        Nsfc_info_dep = NsfcPublishProjectCodeDict.select(NsfcPublishProjectCodeDict.apply_code,
+        nsfc_info_departments_dict = {}
+        nsfc_info_dep = NsfcPublishProjectCodeDict.select(NsfcPublishProjectCodeDict.apply_code,
                                                           NsfcPublishProjectCodeDict.code_name)
-        for record in Nsfc_info_dep:
-            Nsfc_info_departments_dict[record.code_name] = record.apply_code
-        return Nsfc_info_departments_dict
+        for record in nsfc_info_dep:
+            nsfc_info_departments_dict[record.code_name] = record.apply_code
+        return nsfc_info_departments_dict
 
 
 if __name__ == '__main__':
