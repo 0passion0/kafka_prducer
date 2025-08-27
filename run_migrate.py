@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from application.migrate.migrate_to_nfsc import MigrateToNfsc
+from application.migrate.migrate_to_nfsc import MigrateToNsfc
 from application.utils.decorators import log_execution, monitor_performance
 
 
@@ -10,7 +10,7 @@ from application.utils.decorators import log_execution, monitor_performance
 def full_sync(task):
     match task:
         case 'nfsc_task':
-            producer = MigrateToNfsc()
+            producer = MigrateToNsfc()
             producer.sync()
         case _:
             raise ValueError(f'无任务：{task}')

@@ -7,7 +7,7 @@ from application.db import get_database_connection
 from application.db.BaseMysqlModel import BaseMysqlModel
 
 
-class InformationSectionList(BaseMysqlModel):
+class ResourceInformationSectionList(BaseMysqlModel):
     """资讯池段落列表"""
     section_id = CharField(index=True)  # 段落ID（si+时间戳+随机数）
     information_id = CharField(index=True)  # 资讯ID
@@ -23,7 +23,7 @@ class InformationSectionList(BaseMysqlModel):
 
 
     class Meta:
-        table_name = 'information_section_list'
+        table_name = 'resource_information_section_list'
         database = get_database_connection('default')  # 使用默认数据库
 
 

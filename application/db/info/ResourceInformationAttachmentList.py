@@ -7,7 +7,7 @@ from application.db import get_database_connection
 from application.db.BaseMysqlModel import BaseMysqlModel
 
 
-class InformationAttachments(BaseMysqlModel):
+class ResourceInformationAttachmentList(BaseMysqlModel):
     """资讯附件表"""
     attachment_id = CharField(index=True)  # 资讯附件ID，可为空
     information_id = CharField(index=True, null=True)  # 资讯ID，外键
@@ -16,5 +16,5 @@ class InformationAttachments(BaseMysqlModel):
     display_order = IntegerField()  # 展示顺序
 
     class Meta:
-        table_name = 'information_attachments'
+        table_name = 'resource_information_attachment_list'
         database = get_database_connection('default')  # 使用默认数据库

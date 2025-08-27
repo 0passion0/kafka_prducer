@@ -6,7 +6,7 @@ from application.db import get_database_connection
 from application.db.BaseMysqlModel import BaseMysqlModel
 
 
-class InformationList(BaseMysqlModel):
+class ResourceInformationList(BaseMysqlModel):
     """资讯主表，存储资讯基本信息"""
     information_id = CharField(index=True)  # 资讯ID，主键
     source_id = CharField(index=True)  # 来源ID，外键
@@ -23,14 +23,6 @@ class InformationList(BaseMysqlModel):
     machine_review_status = CharField()  # 机器审核状态：0-待审核，1-审核通过，2-审核未通过
 
     class Meta:
-        table_name = 'information_list'
+        table_name = 'resource_information_list'
         database = get_database_connection('default')  # 使用默认数据库
 
-if __name__ == '__main__':
-    # 查询所有 information_id
-    all_ids = InformationList.select(InformationList.information_id)
-
-    # 转成 set
-    id_set = {record.information_id for record in all_ids}
-
-    print(id_set)
