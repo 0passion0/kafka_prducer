@@ -60,8 +60,8 @@ class MigrateToNsfc(BaseMigrate):
 
     @get_database_connection('default1')
     def sync(self):
-        result_dict = self.fetch_information_data()
-        # 获取需要的所有数据
+        result_dict = self.fetch_information_data()  # 获取需要的所有数据
+
         information_list = result_dict['information_list']
         information_tags_relationship = result_dict['information_tags_relationship']
         information_section_list = result_dict['information_section_list']
@@ -107,5 +107,8 @@ class MigrateToNsfc(BaseMigrate):
 
 if __name__ == '__main__':
     # 创建迁移任务实例并执行迁移
-    migrate_to_nsfc = MigrateToNsfc()
-    migrate_to_nsfc.sync()
+    # migrate_to_nsfc = MigrateToNsfc()
+    # migrate_to_nsfc.sync()
+    for i in NsfcInfoList.select().dicts():
+        print(i)
+        break

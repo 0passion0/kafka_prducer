@@ -6,7 +6,6 @@ from application.db import get_database_connection, BaseMysqlModel
 class NsfcInfoList(BaseMysqlModel):
     information_id = CharField(index=True)
     info_type_id = CharField(index=True)
-    project_type_id = CharField(index=True)
     source_id = CharField(index=True)
     province_id = CharField(null=True)
     info_name = CharField(null=True)
