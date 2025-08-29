@@ -1,4 +1,6 @@
 import json
+from collections import defaultdict
+
 from application.db import get_database_connection
 from application.db.nsfc.NsfcInfoList import NsfcInfoList
 from application.db.nsfc.NsfcInfoSectionList import NsfcInfoSectionList
@@ -10,6 +12,17 @@ from application.migrate.base_migrate import BaseMigrate
 
 class MigrateToNsfc(BaseMigrate):
     resource_source = ['www.nsfc.gov.cn']  # 需要迁移的资源源，暂时只有一个网站
+    apply_code_dict = {
+        "数理科学部": "A",
+        "数学物理科学部": "A",
+        "化学科学部": "B",
+        "生命科学部": "C",
+        "地球科学部": "D",
+        "工程与材料科学部": "E",
+        "信息科学部": "F",
+        "管理科学部": "G",
+        "医学科学部": "H",
+    }
 
     def process_information_data(self, information_list, information_tags_relationship):
         """
@@ -22,7 +35,6 @@ class MigrateToNsfc(BaseMigrate):
         返回：
             list: 处理后的信息数据列表，包含所有信息的相关字段
         """
-        nsfc_info_departments_dict = self.get_information_departments_dict()
 
         result_data_list = []  # 存储迁移结果的数据列表
 
@@ -45,11 +57,12 @@ class MigrateToNsfc(BaseMigrate):
                         # 根据标签值的第一个元素获取信息类型ID
                         info_type_id = NsfcInfoTypeDict.select(NsfcInfoTypeDict.info_type_id).where(
                             NsfcInfoTypeDict.info_type_name == tag_value[0]).scalar()
+
             # 将处理后的信息数据添加到结果列表
             result_data_list.append({
                 'information_id': info_if,
                 'info_type_id': info_type_id,
-                'apply_code': nsfc_info_departments_dict.get(info_academic_field, "*") if info_academic_field else None,
+                'apply_code': self.apply_code_dict.get(info_academic_field, "*"),
                 'source_id': source_id,
                 'info_name': info_name,
                 'original_link': original_link,
@@ -95,14 +108,6 @@ class MigrateToNsfc(BaseMigrate):
         exclude_source_ids = NsfcResourceSourceDict.select(NsfcResourceSourceDict.source_id)
         return set(record.source_id for record in exclude_source_ids)
 
-    @staticmethod
-    def get_information_departments_dict():
-        nsfc_info_departments_dict = {}
-        nsfc_info_dep = NsfcPublishProjectCodeDict.select(NsfcPublishProjectCodeDict.apply_code,
-                                                          NsfcPublishProjectCodeDict.code_name)
-        for record in nsfc_info_dep:
-            nsfc_info_departments_dict[record.code_name] = record.apply_code
-        return nsfc_info_departments_dict
 
 
 if __name__ == '__main__':
