@@ -17,6 +17,7 @@ from application.db.mysql_db.nsfc.NsfcInfoSectionList import NsfcInfoSectionList
 from application.db.mysql_db.nsfc.NsfcInfoTypeDict import NsfcInfoTypeDict
 from application.db.mysql_db.nsfc.NsfcPublishProjectCodeDict import NsfcPublishProjectCodeDict
 from application.db.mysql_db.nsfc.NsfcResourceSourceDict import NsfcResourceSourceDict
+from application.utils.logger import get_logger
 
 
 class SectionTranslator:
@@ -66,7 +67,7 @@ class SectionTranslator:
         return {"section_list": result_list, "section_text": "\n".join(es_text_parts)}
 
 
-class NsfcInfoExporter(BaseElasticSearch):
+class NsfcToEs(BaseElasticSearch):
     """
     国家自然科学基金信息导出器（重构版）
 
@@ -75,14 +76,13 @@ class NsfcInfoExporter(BaseElasticSearch):
 
     index_name = "test_information_index"
     area_filter_default = {"0": "全国"}
-
+    
     def __init__(self) -> None:
         """
         初始化导出器实例，准备缓存字典与日志。
         """
         super().__init__()
-        self.logger = logging.getLogger(self.__class__.__name__)
-
+        self.logger = get_logger("nsfc_to_es")
         # 数据缓存
         self._nsfc_info_sections: Dict[int, List[Dict[str, Any]]] = defaultdict(list)
         self._nsfc_info_section_dict: Dict[int, Dict[str, Any]] = {}
@@ -300,4 +300,3 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     exporter = NsfcInfoExporter()
     exporter.sync()
-
