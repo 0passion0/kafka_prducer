@@ -161,7 +161,6 @@ class NsfcInfoExporter(BaseElasticSearch):
         src = self._nsfc_resource_source_dict.get(source_id) or {}
         return src.get("source_main_link")
 
-
     def _build_document(self, row: Dict[str, Any]) -> Dict[str, Any]:
         """
         将数据库中单条 NsfcInfoList 记录转换为最终要写入 ES 的文档结构。
@@ -300,8 +299,5 @@ class NsfcInfoExporter(BaseElasticSearch):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     exporter = NsfcInfoExporter()
-    success = exporter.sync()
-    if success:
-        print("导出完成。")
-    else:
-        print("导出失败，请查看日志。")
+    exporter.sync()
+
