@@ -79,7 +79,7 @@ ELASTIC_CONNECTION = [
         # 服务器地址
         'host': ['192.168.1.245'],
         # 账号
-        "user": "elastic_db",
+        "user": "elastic",
         # 密码
         "password": "medpeer",
         # 连接协议

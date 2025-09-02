@@ -1,4 +1,4 @@
-from application.db.mysql_db.info import ResourceInformationAttachmentList
+from application.db.mysql_db.info.ResourceInformationAttachmentList import ResourceInformationAttachmentList
 from application.db.mysql_db.info.ResourceInformationList import ResourceInformationList
 from application.db.mysql_db.info.ResourceInformationSectionList import ResourceInformationSectionList
 from application.db.mysql_db.info.ResourceInformationTagsRelation import ResourceInformationTagsRelation

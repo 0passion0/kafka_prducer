@@ -10,13 +10,13 @@ import logging
 from collections import defaultdict
 from typing import Any, Dict, List, Optional
 
-from application.db.elastic_db import BaseElasticSearch, create_elastic_mapping
 from application.config import ES_MAPPING_PATH
-from application.db.mysql_db.nsfc import NsfcInfoList
-from application.db.mysql_db.nsfc import NsfcInfoSectionList
-from application.db.mysql_db.nsfc import NsfcInfoTypeDict
+from application.db.elastic_db.base_elastic import create_elastic_mapping, BaseElasticSearch
+from application.db.mysql_db.nsfc.NsfcInfoList import NsfcInfoList
+from application.db.mysql_db.nsfc.NsfcInfoSectionList import NsfcInfoSectionList
+from application.db.mysql_db.nsfc.NsfcInfoTypeDict import NsfcInfoTypeDict
 from application.db.mysql_db.nsfc.NsfcPublishProjectCodeDict import NsfcPublishProjectCodeDict
-from application.db.mysql_db.nsfc import NsfcResourceSourceDict
+from application.db.mysql_db.nsfc.NsfcResourceSourceDict import NsfcResourceSourceDict
 
 
 class SectionTranslator:
@@ -161,6 +161,7 @@ class NsfcInfoExporter(BaseElasticSearch):
         src = self._nsfc_resource_source_dict.get(source_id) or {}
         return src.get("source_main_link")
 
+
     def _build_document(self, row: Dict[str, Any]) -> Dict[str, Any]:
         """
         将数据库中单条 NsfcInfoList 记录转换为最终要写入 ES 的文档结构。
@@ -279,32 +280,27 @@ class NsfcInfoExporter(BaseElasticSearch):
             return False
 
     # ---------- 运行入口 ----------
-    def run(self) -> bool:
+    def sync(self):
         """
         执行完整流程：加载字典/分段 -> 构建文档 -> 创建索引 -> 批量写入 ES。
 
         :return: 全流程成功返回 True，否则 False
         """
-        try:
-            # 加载数据字典与分段
-            self.load_all_dicts()
-            # 构建文档列表
-            self.build_info_list()
-            # 创建索引
-            if not self.create_index_from_mapping():
-                self.logger.error("创建索引失败，终止导出。")
-                return False
-            # 批量写入 ES
-            return self.bulk_insert_to_es()
-        except Exception as exc:
-            self.logger.exception("导出流程异常终止：%s", exc)
-            return False
+        self.load_all_dicts()
+        # 构建文档列表
+        self.build_info_list()
+        # 创建索引
+        if not self.create_index_from_mapping():
+            self.logger.error("创建索引失败，终止导出。")
+            return
+        # 批量写入 ES
+        self.bulk_insert_to_es()
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     exporter = NsfcInfoExporter()
-    success = exporter.run()
+    success = exporter.sync()
     if success:
         print("导出完成。")
     else:
