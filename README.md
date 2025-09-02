@@ -46,10 +46,12 @@ kafka_producer/
 │   │   ├── BaseMysqlModel.py # MySQL基础模型
 │   │   ├── MongoDBManager.py # MongoDB连接管理器
 │   │   ├── info/             # 信息数据库模型
-│   │   └── nfsc/             # NFSC数据库模型
+│   │   └── nsfc/             # NSFC数据库模型
 │   ├── migrate/              # 数据迁移模块
 │   │   ├── __init__.py
-│   │   └── migrate_to_nfsc.py# NFSC数据迁移实现
+│   │   ├── base_migrate.py   # 数据迁移基类
+│   │   ├── migrate_to_nfsc.py# NFSC数据迁移实现
+│   │   └── nfsc_to_es.py     # NFSC到ES数据迁移实现
 │   ├── models/               # 数据结构定义
 │   │   ├── __init__.py
 │   │   └── kafka_models/     # Kafka数据模型
@@ -60,6 +62,9 @@ kafka_producer/
 │   │   ├── __init__.py
 │   │   ├── base_producer.py                   # Kafka生产者的抽象基类
 │   │   └── information_mongo_to_kafka_producer.py # 具体的MongoDB到Kafka同步实现
+│   ├── common/               # 公共模块
+│   │   ├── __init__.py
+│   │   └── elastic/          # ElasticSearch相关
 │   └── utils/                # 工具模块
 │       ├── __init__.py
 │       ├── decorators.py     # 装饰器模块，处理横切关注点
@@ -194,4 +199,3 @@ PRODUCER_CONFIG = {
     # 消息在客户端缓冲区最多等待多少毫秒再发送（与 batch_size 配合做微批）
     "linger_ms": 1000,
 }
-```

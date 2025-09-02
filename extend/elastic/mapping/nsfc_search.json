@@ -1,0 +1,90 @@
+{
+  "mappings": {
+    "dynamic": "false",
+    "properties": {
+      "unit_id": {
+        "type": "keyword"
+      },
+      "unit_city": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "unit_name": {
+        "type": "text",
+        "fields": {
+          "unit_name_key": {
+            "type": "keyword"
+          }
+        },
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "unit_name_eng": {
+        "type": "text",
+        "fields": {
+          "unit_name_eng_key": {
+            "type": "keyword"
+          }
+        },
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "unit_type": {
+        "type": "keyword"
+      },
+      "unit_postal": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "unit_province": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "person_id": {
+        "type": "keyword"
+      },
+      "personnel_name": {
+        "type": "text",
+        "fields": {
+          "personnel_name_key": {
+            "type": "keyword"
+          }
+        },
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "personnel_type": {
+        "type": "keyword"
+      },
+      "personnel_title": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "personnel_unit": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "key_id": {
+        "type": "keyword"
+      },
+      "key_name": {
+        "type": "text",
+        "fields": {
+          "key_name_key": {
+            "type": "keyword"
+          }
+        },
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "search_type": {
+        "type": "integer"
+      }
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "dynamic": "false",
+  "properties": {
+    "information_id": {
+      "type": "keyword"
+    },
+    "info_type": {
+      "type": "object",
+      "properties": {
+        "info_type_id": {
+          "type": "keyword"
+        },
+        "info_type_name": {
+          "type": "text"
+        }
+      }
+    },
+    "source_info": {
+      "type": "object",
+      "properties": {
+        "source_id": {
+          "type": "keyword"
+        },
+        "source_name": {
+          "type": "text"
+        },
+        "source_main_link": {
+          "type": "keyword"
+        }
+      }
+    },
+    "apply_info": {
+      "type": "object",
+      "properties": {
+        "apply_code": {
+          "type": "keyword"
+        },
+        "code_name": {
+          "type": "text"
+        }
+      }
+    },
+    "area_info": {
+      "type": "object",
+      "properties": {
+        "area_id": {
+          "type": "keyword"
+        },
+        "area_name": {
+          "type": "keyword"
+        }
+      }
+    },
+    "info_name": {
+      "type": "text",
+      "analyzer": "ik_max_word",
+      "search_analyzer": "ik_smart"
+    },
+    "original_link": {
+      "type": "keyword"
+    },
+    "publish_time": {
+      "type": "date"
+    },
+    "sections_text": {
+      "type": "text",
+      "analyzer": "ik_max_word",
+      "search_analyzer": "ik_smart"
+    },
+    "sections": {
+      "type": "nested",
+      "properties": {
+        "section_attr": {
+          "type": "keyword"
+        },
+        "title_level": {
+          "type": "integer"
+        },
+        "marc_code": {
+          "type": "keyword"
+        },
+        "src_text": {
+          "type": "object",
+          "properties": {
+            "children": {
+              "type": "nested",
+              "properties": {
+                "text": {
+                  "type": "text",
+                  "analyzer": "ik_max_word",
+                  "search_analyzer": "ik_smart"
+                },
+                "type": {
+                  "type": "keyword"
+                }
+              }
+            }
+          }
+        },
+        "dst_text": {
+          "type": "object",
+          "properties": {
+            "children": {
+              "type": "nested",
+              "properties": {
+                "text": {
+                  "type": "text",
+                  "analyzer": "ik_max_word",
+                  "search_analyzer": "ik_smart"
+                },
+                "type": {
+                  "type": "keyword"
+                }
+              }
+            }
+          }
+        },
+        "media_info": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

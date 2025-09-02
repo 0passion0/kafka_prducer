@@ -62,6 +62,7 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
         """
         try:
             for doc in self.mongodb_stream.get_all(query=query):
+                print(doc)
                 self.send_message(doc)
                 # 更新游标位置
                 self.mongodb_stream.historical_cursor_position = doc.get(self.sort_key)
@@ -118,7 +119,7 @@ class InformationtoKafkaProducer(BaseKafkaProducer):
                 'description': message.get('description', ''),
             },
             metadata={
-                "marc_code": message.get('marc_code'),
+                "marc_code": message.get('marc_code') or 'zh',
                 "details_page": message.get('page_url', ''),
             },
         )

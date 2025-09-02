@@ -1,0 +1,218 @@
+{
+  "mappings": {
+    "dynamic": "false",
+    "properties": {
+      "gain_id": {
+        "type": "keyword"
+      },
+      "gain_name": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "gain_author": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "gain_year": {
+        "type": "integer"
+      },
+      "gain_type": {
+        "properties": {
+          "type_id": {
+            "type": "keyword"
+          },
+          "type_name": {
+            "type": "keyword"
+          }
+        }
+      },
+      "file_path": {
+        "type": "keyword"
+      },
+      "project_info": {
+        "type": "nested",
+        "properties": {
+          "project_id": {
+            "type": "keyword"
+          },
+          "project_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "project_apply_code": {
+            "properties": {
+              "apply_code": {
+                "type": "keyword"
+              },
+              "code_name": {
+                "type": "text",
+                "analyzer": "ik_max_word",
+                "search_analyzer": "ik_smart"
+              }
+            }
+          },
+          "project_category": {
+            "properties": {
+              "category_id": {
+                "type": "keyword"
+              },
+              "category_name": {
+                "type": "text",
+                "analyzer": "ik_max_word",
+                "search_analyzer": "ik_smart"
+              }
+            }
+          },
+          "project_unit": {
+            "properties": {
+              "unit_id": {
+                "type": "keyword"
+              },
+              "unit_name": {
+                "type": "text",
+                "analyzer": "ik_max_word",
+                "search_analyzer": "ik_smart"
+              },
+              "unit_name_eng": {
+                "type": "text",
+                "analyzer": "ik_max_word",
+                "search_analyzer": "ik_smart"
+              },
+              "unit_province": {
+                "type": "text",
+                "analyzer": "ik_max_word",
+                "search_analyzer": "ik_smart",
+                "fields": {
+                  "unit_province_key": {
+                    "type": "keyword"
+                  }
+                }
+              },
+              "unit_city": {
+                "type": "text",
+                "analyzer": "ik_max_word",
+                "search_analyzer": "ik_smart",
+                "fields": {
+                  "unit_city_key": {
+                    "type": "keyword"
+                  }
+                }
+              },
+              "unit_postal": {
+                "type": "text",
+                "analyzer": "ik_max_word",
+                "search_analyzer": "ik_smart"
+              }
+            }
+          }
+        }
+      },
+      "is_del": {
+        "type": "integer"
+      },
+      "gain_desc": {
+        "properties": {
+          "data_info": {
+            "type": "date"
+          },
+          "area_info": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "journal_doi": {
+            "type": "keyword"
+          },
+          "journal_inclusion_status": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "journal_source": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "journal_volume": {
+            "type": "keyword"
+          },
+          "journal_chs_keyword": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "journal_chs_abstract": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "journal_language": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "journal_page_range": {
+            "type": "keyword"
+          },
+          "prize_type": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "prize_grade": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "prize_institution": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "meeting_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "meeting_unit": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "meeting_address": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "meeting_city": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "book_publisher": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "book_num": {
+            "type": "keyword"
+          },
+          "book_word_count": {
+            "type": "keyword"
+          },
+          "patent_num": {
+            "type": "keyword"
+          },
+          "patent_empower_institution": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      }
+    }
+  }
+}

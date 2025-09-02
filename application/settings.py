@@ -71,3 +71,26 @@ PRODUCER_CONFIG = {
     "linger_ms": 1000,
 
 }
+# ElasticSearch数据库连接
+ELASTIC_CONNECTION = [
+    {
+        # 连接标识
+        "sign": "default",
+        # 服务器地址
+        'host': ['192.168.1.245'],
+        # 账号
+        "user": "elastic",
+        # 密码
+        "password": "medpeer",
+        # 连接协议
+        "scheme": "http",
+        # 服务器端口
+        'port': 9200,
+        # 超时时间（秒）
+        "timeout": 30,
+        # 错误重试次数
+        "max_retries": 3,
+        # 超时是否重试
+        "retry_on_timeout": True,
+    },
+]

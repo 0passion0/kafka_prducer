@@ -1,0 +1,148 @@
+{
+  "mappings": {
+    "properties": {
+      "approval_year": {
+        "type": "integer"
+      },
+      "area_info": {
+        "properties": {
+          "area_id": {
+            "type": "keyword"
+          },
+          "area_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "display_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "top_name": {
+            "type": "keyword"
+          }
+        }
+      },
+      "associated_keywords": {
+        "type": "text",
+        "fields": {
+          "associated_keywords_key": {
+            "type": "keyword"
+          }
+        },
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "extra_info": {
+        "properties": {
+          "acceptance_conclusion": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "acceptance_date": {
+            "type": "date"
+          },
+          "cooperation_organization": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "discipline_category": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "funding_amount": {
+            "type": "float"
+          },
+          "leader_title": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "note_date": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "project_type": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "project_year": {
+            "type": "integer"
+          },
+          "revocation_date": {
+            "type": "date"
+          }
+        }
+      },
+      "fund_info": {
+        "properties": {
+          "fund_code": {
+            "type": "keyword"
+          },
+          "fund_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "project_id": {
+        "type": "keyword"
+      },
+      "project_leader": {
+        "type": "text",
+        "fields": {
+          "project_leader_key": {
+            "type": "keyword"
+          }
+        },
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "project_name": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "project_number": {
+        "type": "keyword"
+      },
+      "project_status": {
+        "type": "integer"
+      },
+      "start_end_date": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "unit_info": {
+        "properties": {
+          "unit_id": {
+            "type": "keyword"
+          },
+          "unit_name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      }
+    }
+  }
+}
+

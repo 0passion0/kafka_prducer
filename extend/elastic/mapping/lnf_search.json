@@ -1,0 +1,23 @@
+{
+  "mappings" : {
+      "dynamic" : "false",
+      "properties" : {
+        "object_id" : {
+          "type" : "keyword"
+        },
+        "object_name" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "analyzer" : "ik_max_word",
+          "search_analyzer" : "ik_smart"
+        },
+        "search_type" : {
+          "type" : "integer"
+        }
+      }
+    }
+}

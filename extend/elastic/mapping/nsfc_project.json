@@ -1,0 +1,353 @@
+{
+  "mappings": {
+    "dynamic": "false",
+    "properties": {
+      "approval_num": {
+        "type": "keyword"
+      },
+      "approval_year": {
+        "type": "integer"
+      },
+      "ocr_result": {
+        "type": "boolean"
+      },
+      "chs_abstract": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "cooperation_unit": {
+        "type": "nested",
+        "properties": {
+          "unit_city": {
+            "type": "text",
+            "fields": {
+              "unit_city_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "unit_id": {
+            "type": "keyword"
+          },
+          "unit_name": {
+            "type": "text",
+            "fields": {
+              "unit_name_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "unit_name_eng": {
+            "type": "text",
+            "fields": {
+              "unit_name_eng_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "unit_postal": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "unit_province": {
+            "type": "text",
+            "fields": {
+              "unit_province_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "end_date": {
+        "type": "date"
+      },
+      "eng_abstract": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "final_abstract": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "final_year": {
+        "type": "integer"
+      },
+      "gain_info": {
+        "type": "nested",
+        "properties": {
+          "gain_id": {
+            "type": "keyword"
+          },
+          "gain_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "gain_author": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "gain_type": {
+            "type": "text",
+            "fields": {
+              "gain_type_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "gain_num": {
+        "properties": {
+          "book": {
+            "type": "integer"
+          },
+          "conference": {
+            "type": "integer"
+          },
+          "journal": {
+            "type": "integer"
+          },
+          "patent": {
+            "type": "integer"
+          },
+          "reward": {
+            "type": "integer"
+          }
+        }
+      },
+      "is_del": {
+        "type": "integer"
+      },
+      "project_apply_code": {
+        "properties": {
+          "apply_code": {
+            "type": "keyword"
+          },
+          "code_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "project_category": {
+        "properties": {
+          "category_id": {
+            "type": "keyword"
+          },
+          "category_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "project_faculty_code": {
+        "properties": {
+          "apply_code": {
+            "type": "keyword"
+          },
+          "code_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "project_search_code": {
+        "properties": {
+          "apply_code": {
+            "type": "keyword"
+          },
+          "original_code": {
+            "type": "keyword"
+          },
+          "code_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "project_funding": {
+        "type": "float"
+      },
+      "project_id": {
+        "type": "keyword"
+      },
+      "project_keyword": {
+        "type": "nested",
+        "properties": {
+          "key_id": {
+            "type": "keyword"
+          },
+          "key_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "associated_keywords": {
+        "type": "text",
+        "fields": {
+          "associated_keywords_key": {
+            "type": "keyword"
+          }
+        },
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "project_leader": {
+        "properties": {
+          "person_id": {
+            "type": "keyword"
+          },
+          "personnel_name": {
+            "type": "text",
+            "fields": {
+              "personnel_name_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "personnel_title": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "project_name": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "project_personnel": {
+        "type": "nested",
+        "properties": {
+          "person_id": {
+            "type": "keyword"
+          },
+          "personnel_name": {
+            "type": "text",
+            "fields": {
+              "personnel_name_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "personnel_title": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "personnel_unit": {
+            "type": "text",
+            "fields": {
+              "personnel_unit_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "project_report": {
+        "type": "keyword"
+      },
+      "project_status": {
+        "type": "integer"
+      },
+      "project_subject_code": {
+        "properties": {
+          "apply_code": {
+            "type": "keyword"
+          },
+          "code_name": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "project_unit": {
+        "properties": {
+          "unit_city": {
+            "type": "text",
+            "fields": {
+              "unit_city_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "unit_id": {
+            "type": "keyword"
+          },
+          "unit_name": {
+            "type": "text",
+            "fields": {
+              "unit_name_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "unit_name_eng": {
+            "type": "text",
+            "fields": {
+              "unit_name_eng_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "unit_postal": {
+            "type": "text",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "unit_province": {
+            "type": "text",
+            "fields": {
+              "unit_province_key": {
+                "type": "keyword"
+              }
+            },
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "start_date": {
+        "type": "date"
+      }
+    }
+  }
+}
