@@ -1,8 +1,8 @@
-from application.db.info.ResourceInformationAttachmentList import ResourceInformationAttachmentList
-from application.db.info.ResourceInformationList import ResourceInformationList
-from application.db.info.ResourceInformationSectionList import ResourceInformationSectionList
-from application.db.info.ResourceInformationTagsRelation import ResourceInformationTagsRelation
-from application.db.info.ResourceSourceDict import ResourceSourceDict
+from application.db.mysql_db.info import ResourceInformationAttachmentList
+from application.db.mysql_db.info.ResourceInformationList import ResourceInformationList
+from application.db.mysql_db.info.ResourceInformationSectionList import ResourceInformationSectionList
+from application.db.mysql_db.info.ResourceInformationTagsRelation import ResourceInformationTagsRelation
+from application.db.mysql_db.info.ResourceSourceDict import ResourceSourceDict
 
 
 class BaseMigrate:

@@ -10,13 +10,13 @@ import logging
 from collections import defaultdict
 from typing import Any, Dict, List, Optional
 
-from application.common.elastic.base_elastic import BaseElasticSearch, create_elastic_mapping
+from application.db.elastic_db import BaseElasticSearch, create_elastic_mapping
 from application.config import ES_MAPPING_PATH
-from application.db.nsfc.NsfcInfoList import NsfcInfoList
-from application.db.nsfc.NsfcInfoSectionList import NsfcInfoSectionList
-from application.db.nsfc.NsfcInfoTypeDict import NsfcInfoTypeDict
-from application.db.nsfc.NsfcPublishProjectCodeDict import NsfcPublishProjectCodeDict
-from application.db.nsfc.NsfcResourceSourceDict import NsfcResourceSourceDict
+from application.db.mysql_db.nsfc import NsfcInfoList
+from application.db.mysql_db.nsfc import NsfcInfoSectionList
+from application.db.mysql_db.nsfc import NsfcInfoTypeDict
+from application.db.mysql_db.nsfc.NsfcPublishProjectCodeDict import NsfcPublishProjectCodeDict
+from application.db.mysql_db.nsfc import NsfcResourceSourceDict
 
 
 class SectionTranslator:

@@ -1,12 +1,8 @@
-import json
-from collections import defaultdict
-
 from application.db import get_database_connection
-from application.db.nsfc.NsfcInfoList import NsfcInfoList
-from application.db.nsfc.NsfcInfoSectionList import NsfcInfoSectionList
-from application.db.nsfc.NsfcInfoTypeDict import NsfcInfoTypeDict
-from application.db.nsfc.NsfcResourceSourceDict import NsfcResourceSourceDict
-from application.db.nsfc.NsfcPublishProjectCodeDict import NsfcPublishProjectCodeDict
+from application.db.mysql_db.nsfc import NsfcInfoList
+from application.db.mysql_db.nsfc import NsfcInfoSectionList
+from application.db.mysql_db.nsfc import NsfcInfoTypeDict
+from application.db.mysql_db.nsfc import NsfcResourceSourceDict
 from application.migrate.base_migrate import BaseMigrate
 
 

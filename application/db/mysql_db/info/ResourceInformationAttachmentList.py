@@ -1,10 +1,9 @@
-from peewee import (CharField, IntegerField,
-                    AutoField, SQL
+from peewee import (CharField, IntegerField
                     )
 from playhouse.mysql_ext import JSONField
 
 from application.db import get_database_connection
-from application.db.BaseMysqlModel import BaseMysqlModel
+from application.db.mysql_db.base_mysql_model import BaseMysqlModel
 
 
 class ResourceInformationAttachmentList(BaseMysqlModel):

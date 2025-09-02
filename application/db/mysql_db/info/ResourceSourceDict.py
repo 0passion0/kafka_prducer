@@ -1,8 +1,8 @@
-from peewee import (CharField, AutoField, IntegerField, SQL)
+from peewee import (CharField)
 
 from playhouse.mysql_ext import JSONField
 from application.db import get_database_connection
-from application.db.BaseMysqlModel import BaseMysqlModel
+from application.db.mysql_db.base_mysql_model import BaseMysqlModel
 
 
 class ResourceSourceDict(BaseMysqlModel):

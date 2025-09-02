@@ -43,4 +43,4 @@ def get_database_connection(db_key='default'):
 init_database_connections()
 
 # 确保在导入模型前初始化数据库连接
-from .BaseMysqlModel import BaseMysqlModel
+from application.db.mysql_db.base_mysql_model import BaseMysqlModel

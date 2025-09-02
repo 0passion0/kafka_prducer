@@ -43,10 +43,18 @@ kafka_producer/
 │   │   └── file_cursor.py   # 文件游标管理实现
 │   ├── db/                   # 数据库连接管理
 │   │   ├── __init__.py
-│   │   ├── BaseMysqlModel.py # MySQL基础模型
-│   │   ├── MongoDBManager.py # MongoDB连接管理器
-│   │   ├── info/             # 信息数据库模型
-│   │   └── nsfc/             # NSFC数据库模型
+│   │   ├── elastic_db/       # ElasticSearch数据库相关
+│   │   │   ├── __init__.py
+│   │   │   ├── base_elastic.py
+│   │   │   └── base_elastic_aggregate.py
+│   │   ├── mongo_db/         # MongoDB数据库相关
+│   │   │   ├── __init__.py
+│   │   │   └── mongo_db_manager.py
+│   │   ├── mysql_db/         # MySQL数据库相关
+│   │   │   ├── __init__.py
+│   │   │   ├── base_mysql_model.py
+│   │   │   ├── info/
+│   │   │   └── nsfc/
 │   ├── migrate/              # 数据迁移模块
 │   │   ├── __init__.py
 │   │   ├── base_migrate.py   # 数据迁移基类
@@ -62,13 +70,10 @@ kafka_producer/
 │   │   ├── __init__.py
 │   │   ├── base_producer.py                   # Kafka生产者的抽象基类
 │   │   └── information_mongo_to_kafka_producer.py # 具体的MongoDB到Kafka同步实现
-│   ├── common/               # 公共模块
+│   ├── utils/                # 工具模块
 │   │   ├── __init__.py
-│   │   └── elastic/          # ElasticSearch相关
-│   └── utils/                # 工具模块
-│       ├── __init__.py
-│       ├── decorators.py     # 装饰器模块，处理横切关注点
-│       └── logger.py         # 日志模块
+│   │   ├── decorators.py     # 装饰器模块，处理横切关注点
+│   │   └── logger.py         # 日志模块
 ├── runtime/                  # 运行时数据目录
 │   ├── cursors/              # 游标文件存储目录
 │   └── log/                  # 日志文件目录
@@ -82,6 +87,7 @@ kafka_producer/
 
 - MongoDB 管理器：单例模式设计，使用连接池管理 MongoDB 连接
 - MySQL 管理器：使用连接池管理 MySQL 连接
+- ElasticSearch 管理器：用于与 ElasticSearch 交互
 - 易于扩展支持其他数据源管理器（如 PostgreSQL 等）
 
 ### Kafka 生产者基类 (BaseKafkaProducer)
